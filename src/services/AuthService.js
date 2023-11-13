@@ -5,7 +5,7 @@ import api from "@/config/axios";
 const AuthService = {
 	waitForAuthorization: async (callback) => {
 		try {
-            const response = JSON.parse(localStorage.getItem("plateaumed_insurer_user"))
+            const response = JSON.parse(localStorage.getItem("plateaumed_hr_user"))
             console.log(response);
             callback(response);
         } catch (error) {
@@ -32,7 +32,7 @@ const AuthService = {
 	
 
 	login: async (email, password) => {
-		const response = await noAuthAPI.post("/insurer/login.php", {
+		const response = await noAuthAPI.post("/hr/login.php", {
             email,
             password
         });

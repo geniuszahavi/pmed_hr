@@ -24,7 +24,7 @@ export function withPublic(WrappedComponent) {
 	  const auth = useAuth();
 	  let value = null;
 	  if (typeof window !== "undefined") {
-		const obj = localStorage.getItem("plateaumed_insurer")
+		const obj = localStorage.getItem("plateaumed_hr")
 		value = obj;
 		console.log(value);
 	  }
@@ -32,7 +32,7 @@ export function withPublic(WrappedComponent) {
 	  console.log(value);
 
 	  if (value) {
-		router.replace("/dashboard/enrolment");
+		router.replace("/dashboard/staff");
 		return (
 			<div className="h-screen min-h-screen flex items-center justify-center">
 				<ClipLoader
@@ -58,14 +58,14 @@ export function withProtected(WrappedComponent) {
 
 	let value = null;
 	if (typeof window !== "undefined") {
-		const obj = localStorage.getItem("plateaumed_insurer")
+		const obj = localStorage.getItem("plateaumed_hr")
 		value = obj;
 		console.log(value);
 	}
 
 	if (!value) {
 		if (typeof window !== "undefined") {
-			localStorage.removeItem("plateaumed_insurer")
+			localStorage.removeItem("plateaumed_hr")
 		}
 		router.replace("/auth/login");
 		return (

@@ -1,21 +1,28 @@
-import { AddOrganizationModal, OrganizationRow, SmallButton, SmatNav, Success } from "@/components";
+import { AddOrganizationModal, OrganizationRow, SmallButton, SmatNav, Success, UploadStaffDetailModal } from "@/components";
 import { ChevronLeftIcon, ChevronRightIcon, SearchIcon, SortDescendingIcon } from "@heroicons/react/outline";
 import { useState, useEffect } from "react";
 import { withProtected } from "@/hooks/routes";
 import InsurerService from "@/services/InsurerService";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import icon from "@/assets/insurer-icon.png"
+import axios from "axios";
 
 
 function Enrolment({ auth }) {
     const router = useRouter();
     const { setUser, user } = auth;
     const [openModal, setOpenModal] = useState(false);
+    const [openSuccess, setOpenSuccessModal] = useState(false);
     const [disabled, setDisabled] = useState(false);
-    const [orgs, setOrgs] = useState(null);
+    const [orgs, setOrgs] = useState([]);
+    const [file, setFile] = useState(null);
+    const [progress, setProgress] = useState(0);
+
+    
 
     useEffect(() => {
-        listOrgs()
+        //listOrgs()
     }, [])
 
     const listOrgs = async () => {
@@ -38,33 +45,91 @@ function Enrolment({ auth }) {
         router.push(`/dashboard/enrolment/${id}`);
     }
 
+
+    const onFileChange = (e) => {
+        setFile(e.target.files[0])
+        console.log(e.target.files[0]);
+    }
+
+    const uploadFile = async (e) => {
+        e.preventDefault()
+        console.log(file);
+        e.preventDefault();
+
+        if (!file) {
+            return;
+        }
+        try {
+            let formData = new FormData();
+            formData.append("file", file);
+            formData.append("organization_id", JSON.parse(localStorage.getItem("plateaumed_hr_user")).insurer_id);
+        
+            const options = {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              },
+              onUploadProgress: (progressEvent) => {
+                console.log('progressEvent', progressEvent)
+                // const { loaded, total } = progressEvent;
+                // console.log(loaded);
+                // console.log(total);
+                // const percentage = (loaded / total) * 100;
+                // setProgress(percentage.toFixed(2));     
+              },
+            };
+        
+            const response = await axios({
+                method: "POST",
+                url: "https://api.coderigi.co/hr/add.php",
+                data: formData,
+                options
+            })
+            console.log("File was uploaded successfylly:", response);
+            if(response.data?.message) {
+                setOpenModal(false);
+                setFile(null)
+                setOpenSuccessModal(true);
+            }
+
+          } catch (e) {
+            console.error(e);
+            const error =
+              e.response && e.response.data
+                ? e.response.data.error
+                : "Sorry! something went wrong.";
+            console.log(error);
+        }
+    }
+
+
     return (
         <>
             <main className="bg-[#EDF0F8] h-screen">
-                <AddOrganizationModal visible={openModal} closeModal={() => setOpenModal(false)} />
-                <Success />
-                <SmatNav name={user?.contact_person_first_name} />
+                <UploadStaffDetailModal uploadFile={uploadFile} file={file} onFileChange={onFileChange} visible={openModal} closeModal={() => setOpenModal(false)} />
+                <Success visible={openSuccess} />
+                <SmatNav name={user?.organization_contact_first_name} />
                 <section className="m-[32px]">
                     <div className="flex justify-between items-center mb-8">
-                        <h5 className="text-[#051438] text-[18px] font-semibold">Enrolment management</h5>
+                        <h5 className="text-[#051438] text-[18px] font-semibold">Staff management</h5>
                         <div className="flex items-center gap-8">
                             <div className="flex gap-3 items-center bg-white border border-[#DFE2E9] rounded-[10px]  pr-[20px]">
                                 <input type="text" id="search" name="search" className="w-full py-[10px] pl-[20px] rounded-l-[10px]" placeholder="Search list" />
                                 <SearchIcon className="h-5 w-5" />
                             </div>
-                            <SmallButton text="Add organization" onClick={() => setOpenModel(true)} />
+                            <SmallButton text="Upload staff details" onClick={() => setOpenModal(true)} />
                         </div>
                     </div>
 
 
-                    { !disabled && orgs?.length == 0 && <div className="h-[582px] flex justify-center items-center overflow-scroll">
+                    { !disabled && orgs?.length == 0 && <div className="h-[540px] flex justify-center items-center overflow-scroll">
                         <div className="bg-white rounded-[10px] border border-[#DFE2E9] p-[16px] flex flex-col justify-center items-center h-[360px] w-[640px]">
                             <Image src={icon} width="120" height="" alt="" className="mb-8" />
                             <p className="text-[#677597] text-[16px] mb-2">No data recorded</p>
+                            <p className="text-[#051438] text-[16px] font-medium">Click on the Upload staff details button to get started</p>
                         </div>
                     </div> }
 
-                    { orgs == null && <div className="h-[550px] flex justify-center items-center">
+                    { !disabled && orgs == null && <div className="h-[550px] flex justify-center items-center">
                         <span class="spinner"></span>
                     </div> }
 

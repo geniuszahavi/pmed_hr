@@ -45,13 +45,13 @@ function Login({ auth }) {
             console.log(response);
             toast.success(response.data.message);
             if (typeof window !== "undefined") {
-                localStorage.setItem("plateaumed_insurer", response.data.token);
-                const obj = localStorage.setItem("plateaumed_insurer_user", JSON.stringify(response.data.data));
+                localStorage.setItem("plateaumed_hr", response.data.token);
+                localStorage.setItem("plateaumed_hr_user", JSON.stringify(response.data.data));
                 //JSON.stringify(obj);
             }
             setUser(response.data.data);
             setDisabled(false);
-            router.replace("/dashboard/enrolment");
+            router.replace("/dashboard/staff");
         } catch (error) {
             console.log(error);
             toast.error(error.message);
@@ -59,9 +59,6 @@ function Login({ auth }) {
             setDisabled(false);
         }
     }
-
-
-    
 
 
     return (

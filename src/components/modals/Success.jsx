@@ -2,11 +2,14 @@ import { PlusCircleIcon, XIcon } from "@heroicons/react/outline";
 import success from "@/assets/success.png";
 import { Button, SmallButton } from "..";
 import Image from "next/image";
+import useSuccess from "@/hooks/useSuccess";
 
 
 function Success({ visible, closeModal }) {
+    const [isActive] = useSuccess(visible);
+    
     return (
-        <div className={`${visible ? "bg-[#000] bg-opacity-70 fixed top-0 w-full h-full flex flex-col justify-center items-center" : "hidden"}`}>
+        <div className={`${isActive ? "bg-[#000] bg-opacity-70 fixed top-0 w-full h-full flex flex-col justify-center items-center" : "hidden"}`}>
 
             <div className="bg-[#EDF0F8] mx-auto w-[25%] rounded-[10px] py-[16px] px-[24px]">
                 <h2 className="text-[18px] text-[#051438] font-semibold text-center mb-1">Staff information updated successfully!</h2>
