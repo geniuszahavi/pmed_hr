@@ -47,6 +47,11 @@ const InsurerService = {
 	// 	return response;
 	// },
 
+	listStaff: async (id) => {
+		const response = await authAPI.get(`/hr/staff_members.php?company_id=${id}`);
+		return response;
+	},
+
 	listOrganization: async (id) => {
 		const response = await authAPI.get(`/insurer/companies.php?insurer_id=${id}`);
 		return response;

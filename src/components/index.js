@@ -7,6 +7,7 @@ export { default as AddConditionModal } from "./modals/AddCondition.jsx";
 export { default as EditEnrolleeModal } from "./modals/EditEnrollee.jsx";
 export { default as Plan } from "./modals/Plan.jsx";
 export { default as Success } from "./modals/Success.jsx";
+export { default as Logout } from "./modals/Logout.jsx";
 export { default as AddPlanModal } from "./modals/AddPlan.jsx";
 export { default as UploadProviderModal } from "./modals/UploadProvider.jsx";
 export { default as UploadStaffDetailModal } from "./modals/UploadStaffDetail.jsx";
@@ -19,6 +20,7 @@ export { default as ProviderRow } from "./rows/ProviderRow.jsx";
 export { default as PreExistingConditionRow } from "./rows/PreExistingConditionRow.jsx";
 export { default as OrganizationRow } from "./rows/OrganizationRow.jsx";
 export { default as OrganizationUserRow } from "./rows/OrganizationUserRow.jsx";
+export { default as EnrolleeRow } from "./rows/EnrolleeRow.jsx";
 
 export { default as PrimaryEnrolleeForm } from "./enrollee/PrimaryEnrolleeForm.jsx";
 export { default as DependantForm } from "./enrollee/DependantForm.jsx";

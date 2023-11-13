@@ -1,4 +1,4 @@
-import { AddOrganizationModal, OrganizationRow, SmallButton, SmatNav, Success, UploadStaffDetailModal } from "@/components";
+import { AddOrganizationModal, EnrolleeRow, Logout, OrganizationRow, OrganizationUserRow, SmallButton, SmatNav, Success, UploadStaffDetailModal } from "@/components";
 import { ChevronLeftIcon, ChevronRightIcon, SearchIcon, SortDescendingIcon } from "@heroicons/react/outline";
 import { useState, useEffect } from "react";
 import { withProtected } from "@/hooks/routes";
@@ -7,30 +7,34 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import icon from "@/assets/insurer-icon.png"
 import axios from "axios";
+import useLogOut from "@/hooks/useLogout";
 
 
 function Enrolment({ auth }) {
     const router = useRouter();
+    const [setLogOut] = useLogOut();
     const { setUser, user } = auth;
     const [openModal, setOpenModal] = useState(false);
+    const [openSignOut, setOpenSignOut] = useState(false);
     const [openSuccess, setOpenSuccessModal] = useState(false);
     const [disabled, setDisabled] = useState(false);
-    const [orgs, setOrgs] = useState([]);
+    const [staffs, setStaffs] = useState(null);
     const [file, setFile] = useState(null);
     const [progress, setProgress] = useState(0);
+    const [enrollee, setEnrollee] = useState(null);
 
     
 
     useEffect(() => {
-        //listOrgs()
+        listStaffs()
     }, [])
 
-    const listOrgs = async () => {
+    const listStaffs = async () => {
         setDisabled(true);
         try {
-            const response = await InsurerService.listOrganization(JSON.parse(localStorage.getItem("plateaumed_insurer_user")).id);
+            const response = await InsurerService.listStaff(JSON.parse(localStorage.getItem("plateaumed_hr_user")).insurer_id);
             console.log(response);
-            setOrgs(response.data)
+            setStaffs(response.data)
             setDisabled(false);
         } catch (error) {
             setDisabled(false);
@@ -89,6 +93,7 @@ function Enrolment({ auth }) {
                 setOpenModal(false);
                 setFile(null)
                 setOpenSuccessModal(true);
+                listStaffs();
             }
 
           } catch (e) {
@@ -102,15 +107,52 @@ function Enrolment({ auth }) {
     }
 
 
+    const openEnrollee = (enrollee) => {
+        setEnrollee(enrollee);
+        setOpenModal(true)
+    }
+
+
     return (
         <>
             <main className="bg-[#EDF0F8] h-screen">
                 <UploadStaffDetailModal uploadFile={uploadFile} file={file} onFileChange={onFileChange} visible={openModal} closeModal={() => setOpenModal(false)} />
-                <Success visible={openSuccess} />
-                <SmatNav name={user?.organization_contact_first_name} />
+                <Success visible={openSuccess} title="Staff list submitted successfully!" description="Your staff list has been submitted to Smathealth Medicare Limited"
+                    closeModal={() => setOpenSuccessModal(false)} />
+                <SmatNav name={user?.organization_contact_first_name}  openSignOut={() => setOpenSignOut(true)} />
+                <Logout visible={openSignOut} closeModal={() => setOpenSignOut(false)} logout={() => { setLogOut(true);  setOpenSignOut(false) }}  />
                 <section className="m-[32px]">
+                    {/* <div className="flex justify-between items-center mb-8">
+                        <h5 className="text-[#051438] text-[18px] font-semibold">Staff management</h5>
+                        <div className="flex items-center gap-8">
+                            <div className="flex gap-3 items-center bg-white border border-[#DFE2E9] rounded-[10px]  pr-[20px]">
+                                <input type="text" id="search" name="search" className="w-full py-[10px] pl-[20px] rounded-l-[10px]" placeholder="Search list" />
+                                <SearchIcon className="h-5 w-5" />
+                            </div>
+                            <SmallButton text="Upload staff details" onClick={() => setOpenModal(true)} />
+                        </div>
+                    </div> */}
+
                     <div className="flex justify-between items-center mb-8">
                         <h5 className="text-[#051438] text-[18px] font-semibold">Staff management</h5>
+
+                        {!disabled && staffs?.staff_members?.length > 0 && <div className="bg-[#DFE2E9] py-[8px] px-[16px] flex gap-7 justify-between items-center rounded-[10px]">
+                            <div className="flex flex-col  items-center">
+                                <span className="text-[#051438] text-[16px] font-semibold">{ staffs?.staff_members.length}</span>
+                                <span className="text-[#677597] text-[14px] font-semibold">Total staff enrolled</span>
+                            </div>
+                            <div className="flex flex-col  items-center">
+                                <span className="text-[#051438] text-[16px] font-semibold">{ staffs?.incomplete_setup }</span>
+                                <span className="text-[#677597] text-[14px] font-semibold">Enrollees with info completed</span>
+                            </div>
+
+                            <div className="flex flex-col  items-center">
+                                <span className="text-[#051438] text-[16px] font-semibold">{ staffs?.total_dependents }</span>
+                                <span className="text-[#677597] text-[14px] font-semibold">Total dependants</span>
+                            </div>
+                        </div>}
+
+
                         <div className="flex items-center gap-8">
                             <div className="flex gap-3 items-center bg-white border border-[#DFE2E9] rounded-[10px]  pr-[20px]">
                                 <input type="text" id="search" name="search" className="w-full py-[10px] pl-[20px] rounded-l-[10px]" placeholder="Search list" />
@@ -121,7 +163,7 @@ function Enrolment({ auth }) {
                     </div>
 
 
-                    { !disabled && orgs?.length == 0 && <div className="h-[540px] flex justify-center items-center overflow-scroll">
+                    { !disabled && staffs?.staff_members?.length == 0 && <div className="h-[540px] flex justify-center items-center overflow-scroll">
                         <div className="bg-white rounded-[10px] border border-[#DFE2E9] p-[16px] flex flex-col justify-center items-center h-[360px] w-[640px]">
                             <Image src={icon} width="120" height="" alt="" className="mb-8" />
                             <p className="text-[#677597] text-[16px] mb-2">No data recorded</p>
@@ -129,11 +171,11 @@ function Enrolment({ auth }) {
                         </div>
                     </div> }
 
-                    { !disabled && orgs == null && <div className="h-[550px] flex justify-center items-center">
+                    { !disabled && staffs == null && <div className="h-[550px] flex justify-center items-center">
                         <span class="spinner"></span>
                     </div> }
 
-                    { !disabled && orgs?.length > 0 && <div className="h-[582px]">
+                    { !disabled && staffs?.staff_members?.length > 0 && <div className="h-[582px]">
                         <div>
                             <div className="flex justify-between items-center mb-5">
                                 <div className="flex gap-1 items-center">
@@ -164,24 +206,24 @@ function Enrolment({ auth }) {
 
                                 <ul className="flex justify-between">
                                     <li className="px-6 py-3 text-[16px] text-[#A6AFC2] font-semibold">
-                                        Organization
+                                        Enrollee information
                                     </li>
                                     <li className="px-6 py-3 text-[16px] text-[#A6AFC2] font-semibold">
-                                        Contact person
+                                        Contact information
                                     </li>
                                     <li className="px-6 py-3 text-[16px] text-[#A6AFC2] font-semibold">
-                                        Enrollees
+                                        Job information
                                     </li>
                                     <li className="px-6 py-3 text-[16px] text-[#A6AFC2] font-semibold">
-                                         Plan information
+                                        Preferred provider
                                     </li>
                                     <li className="px-6 py-3 text-[16px] text-[#A6AFC2] font-semibold">
-                                        <span className="sr-only">Edit</span>
+                                        Plan information
                                     </li>
                                 </ul>
 
                                 <div className="">
-                                    <OrganizationRow organizations={orgs} openOrg={openOrg} />
+                                    <EnrolleeRow enrollees={ staffs?.staff_members } openPlan={openEnrollee} />
                                 </div>
 
 

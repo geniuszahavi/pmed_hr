@@ -66,6 +66,7 @@ export function withProtected(WrappedComponent) {
 	if (!value) {
 		if (typeof window !== "undefined") {
 			localStorage.removeItem("plateaumed_hr")
+			localStorage.removeItem("plateaumed_hr_user");
 		}
 		router.replace("/auth/login");
 		return (
