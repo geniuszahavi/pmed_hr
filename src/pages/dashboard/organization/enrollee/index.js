@@ -3,7 +3,7 @@ import { ChevronDoubleRightIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightI
 import { useState, useEffect } from "react";
 import icon from "@/assets/insurer-icon.png";
 import Image from "next/image";
-import { withProtected } from "@/hooks/insurerRoutes";
+import { withProtected } from "@/hooks/routes";
 
 
 function OrganizationStaff() {
