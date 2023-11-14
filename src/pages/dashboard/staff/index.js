@@ -109,7 +109,8 @@ function Enrolment({ auth }) {
 
     const openEnrollee = (enrollee) => {
         setEnrollee(enrollee);
-        setOpenModal(true)
+        console.log(enrollee);
+        router.push(`/dashboard/staff/${enrollee.staff_id}`)
     }
 
 
@@ -119,7 +120,7 @@ function Enrolment({ auth }) {
                 <UploadStaffDetailModal uploadFile={uploadFile} file={file} onFileChange={onFileChange} visible={openModal} closeModal={() => setOpenModal(false)} />
                 <Success visible={openSuccess} title="Staff list submitted successfully!" description="Your staff list has been submitted to Smathealth Medicare Limited"
                     closeModal={() => setOpenSuccessModal(false)} />
-                <SmatNav name={user?.organization_contact_first_name}  openSignOut={() => setOpenSignOut(true)} />
+                <SmatNav name={user?.organization_contact_first_name} openSignOut={() => setOpenSignOut(true)} />
                 <Logout visible={openSignOut} closeModal={() => setOpenSignOut(false)} logout={() => { setLogOut(true);  setOpenSignOut(false) }}  />
                 <section className="m-[32px]">
                     {/* <div className="flex justify-between items-center mb-8">

@@ -7,7 +7,7 @@ function SmatNav({ name, openSignOut }) {
             <Image src={logo} width="200" height="" className="" alt="" />
             <button className="flex gap-4 items-center" type="button" onClick={openSignOut}>
                 <p className="text-[#051438] font-bold text-[18px]">Hi, { name }</p>
-                <span className="bg-[#A6AFC2] w-[26px] h-[26px] rounded-full flex items-center justify-center text-white">Y</span>
+                <span className="bg-[#A6AFC2] w-[26px] h-[26px] rounded-full flex items-center justify-center text-white">{name.split("")[0]}</span>
             </button>
         </nav>
     );
