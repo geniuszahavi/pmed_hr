@@ -14,7 +14,7 @@ function UserDetailsCard({ visible, staff, id, closeModal }) {
     console.log("id:", id);
     return item.staff_id === id;
   });
-  console.log({ selectedStaff });
+  console.log( selectedStaff );
   return (
     <div
       className={`${
@@ -28,7 +28,7 @@ function UserDetailsCard({ visible, staff, id, closeModal }) {
         {selectedStaff && (
           <div className="border-xl w-[50%] h-[30vh] m-auto p-4  border details  ">
             <div className="flex items-center gap-4">
-              <img src={selectedStaff?.profile_image} className="w-24" alt="" />
+            <img src= {`https://api.coderigi.co/staff/uploads/${selectedStaff?.profile_image_filename}`}  className="w-44" alt="" />
               <div className="flex flex-col gap-6 w-full">
                 <div className="block">
                   <h2>Enrolee name</h2>
@@ -65,6 +65,17 @@ function UserDetailsCard({ visible, staff, id, closeModal }) {
                 <div className="block">
                     <p>Plan</p>
                     <p className="font-bold">{selectedStaff?.plan}</p>
+                </div>
+                <div className="block">
+                    <p>Effective until</p>
+                    <p className="font-bold">{selectedStaff?.date || "Not Available"}</p>
+                </div>
+            </div>
+
+            <div className="flex justify-between mt-6">
+                <div className="block">
+                    <p>Company Name</p>
+                    <p className="font-bold">{selectedStaff?.insurance_id}</p>
                 </div>
                 <div className="block">
                     <p>Effective until</p>
