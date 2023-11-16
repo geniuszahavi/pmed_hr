@@ -44,6 +44,13 @@ input:-webkit-autofill:active{
     -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
+.details{
+  background: url('../assets/bg_card.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 .loader {
   display: flex;
   align-items: center;
