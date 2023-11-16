@@ -50,6 +50,12 @@ function UploadStaffDetailModal({ visible, uploadFile, onFileChange, file, close
                                     <span className="flex h-[10px] w-[1px] bg-[#677597]"></span>
                                     <span className="text-[#677597] text-[14px] font-medium">{ progress < 100 ? "Uploading": "Completed"}</span>
                                 </p>
+                                {progress > 0 && progress < 100 && (
+        <div>
+          <p>Upload Progress: {progress}%</p>
+          <progress value={progress} max="100" />
+        </div>
+      )}
                             </div>
                             <div className="w-full bg-[#DFE2E9] rounded-[6px] relative flex h-[6px]">
                                 <div className="h-full bg-[#0000CC] rounded-[6px]" style={{ width: `${progress}%`}}></div>

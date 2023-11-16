@@ -5,13 +5,38 @@ import icon from "@/assets/insurer-icon.png";
 import Image from "next/image";
 import useLogOut from "@/hooks/useLogout";
 import { withProtected } from "@/hooks/routes";
-
+import { useRouter } from 'next/router';
+import axios from "axios";
+import InsurerService from "@/services/InsurerService";
 
 function OrganizationStaffSingle({ auth }) {
+    const router = useRouter();
+    const { id } = router.query;
+    const enrolleeId = id
+    console.log({id})
     const { setUser, user } = auth;
     const [setLogOut] = useLogOut();
     const [openModal, setOpenModal] = useState(false);
     const [openSignOut, setOpenSignOut] = useState(false);
+    const [disabled, setDisabled] = useState(false);
+    const [staffs, setStaffs] = useState(null);
+    useEffect(() => {
+        listStaffs()
+    }, [])
+
+   console.log({staffs})
+    const listStaffs = async () => {
+        setDisabled(true);
+        try {
+            const response = await InsurerService.listStaff(JSON.parse(localStorage.getItem("plateaumed_hr_user")).insurer_id);
+            console.log(response);
+            setStaffs(response.data)
+            setDisabled(false);
+        } catch (error) {
+            setDisabled(false);
+            console.log(error);
+        }
+    }
 
 ;    return (
         <>
@@ -31,9 +56,9 @@ function OrganizationStaffSingle({ auth }) {
 
                             <ChevronDoubleRightIcon className="h-5 w-5 text-[#051438]" />
 
-                            <h5 className="text-[#051438] text-[16px] font-semibold">Aokpopoidon Endurance</h5>
+                            <h5 className="text-[#051438] text-[16px] font-semibold"></h5>
                         </div>
-                        <SmallButton text="Edit enrollee info" onClick={() => setOpenModel(true)} />
+                        <SmallButton text="Edit enrollee info" onClick={() => router.push(`/dashboard/staff/${enrolleeId}`)} />
                     </div>
 
 
@@ -52,42 +77,52 @@ function OrganizationStaffSingle({ auth }) {
                         </div>
 
                         <div className="grid grid-cols-3">
+{
+    staffs?.staff_members.map((item)=> (
+        <>
+        
+        <EnrolleeInfo  title="First name" text={item.first_name} />
+        <EnrolleeInfo title="Middle name" text={item.middle_name} />
 
-                            <EnrolleeInfo title="First name" text="Arthur" />
+<EnrolleeInfo title="Last name" text={item?.last_name} />
 
-                            <EnrolleeInfo title="Middle name" text="Shawn" />
+<EnrolleeInfo title="Gender" text={item?.gender} />
 
-                            <EnrolleeInfo title="Last name" text="ArtAubreyhur" />
+<EnrolleeInfo title="Date of Birth" text={item.dob} />
 
-                            <EnrolleeInfo title="Gender" text="Male" />
+<EnrolleeInfo title="Phone number" text={item?.phone_number} />
 
-                            <EnrolleeInfo title="Date of Birth" text="12 Jul 1991" />
+<EnrolleeInfo title="Email address" text={item?.email} />
 
-                            <EnrolleeInfo title="Phone number" text="07012345678" />
+<EnrolleeInfo title="Nationality" text={item.nationality} />
 
-                            <EnrolleeInfo title="Email address" text="mccurley@yahoo.ca" />
+<EnrolleeInfo title="State of origin" text={item?.state_of_origin} />
 
-                            <EnrolleeInfo title="Nationality" text="Nigerian" />
+<EnrolleeInfo title="Address" text={item?.address} />
 
-                            <EnrolleeInfo title="State of origin" text="Kwara" />
+<EnrolleeInfo title="Job title" text={item?.job_title} />
 
-                            <EnrolleeInfo title="Address" text="1123, Villa Park, Victoria Island" />
+<EnrolleeInfo title="Level" text={item.level}/>
 
-                            <EnrolleeInfo title="Job title" text="Pipeline Engineer" />
+<EnrolleeInfo title="Staff ID" text={item?.staff_id} />
 
-                            <EnrolleeInfo title="Level" text="Associate Pipeline Engineer" />
+<EnrolleeInfo title="Preferred hospital" text="Ivory Specialist Hospital Maternity, Ariaria, Abia" />
 
-                            <EnrolleeInfo title="Staff ID" text="NV-005689" />
+<EnrolleeInfo title="Plan" text={item?.plan} />
 
-                            <EnrolleeInfo title="Preferred hospital" text="Ivory Specialist Hospital Maternity, Ariaria, Abia" />
+<EnrolleeInfo title="Pre-existing conditions" text={item?.pre_conditions} />
 
-                            <EnrolleeInfo title="Plan" text="Bronze" />
-                            
-                            <EnrolleeInfo title="Pre-existing conditions" text="Lung disease" />
+<EnrolleeInfo title="Insurance ID" text="ATL126575553" />
 
-                            <EnrolleeInfo title="Insurance ID" text="ATL126575553" />
+<EnrolleeInfo title="Signature" text={item?.signature} />
 
-                            <EnrolleeInfo title="Signature" text="Signature" />
+        </>
+    )
+    
+    
+    )
+}
+
                         </div>
                         
                     </div>
@@ -98,11 +133,28 @@ function OrganizationStaffSingle({ auth }) {
                             <span className="text-[#A6AFC2] font-bold text-[16px]">Dependants</span>
                             <span className="w-[95%] h-[1px] flex bg-[#DFE2E9]"></span>
                         </div>
+                        {
+                            staffs?.total_dependents !== 0 ? 
+                            <>
+                            {
+    staffs?.total_dependents.map(()=>(
+<>
 
-                        <Dependant name="Arthur Tommy Shelby" />
+<Dependant name="Arthur Tommy Shelby" />
 
-                        <Dependant name="Valerie N&apos;kom Shelby" />
-                        
+<Dependant name="Valerie N&apos;kom Shelby" />
+</>
+        
+    ))
+}
+                            </>:
+                            <>
+<Dependant name="No data" />
+                            
+                            </>
+
+                        }
+
                     </div>
                 </section>
             

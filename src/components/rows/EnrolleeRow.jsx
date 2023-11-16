@@ -1,10 +1,14 @@
 import { ChevronRightIcon, InformationCircleIcon, UserIcon } from "@heroicons/react/outline";
-
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 function EnrolleeRow({ enrollees, openPlan }) {
+    const router = useRouter();
+ 
+
     return (
         <>
-            { enrollees.map((enrollee, index) => <button key={index} className="mb-3 rounded-[10px] px-[16px] text-left bg-white w-full flex justify-between items-start pt-2 pb-2" onClick={() => openPlan(enrollee)}>
+            { enrollees.map((enrollee, index) => <button key={index} className="mb-3 rounded-[10px] px-[16px] text-left bg-white w-full flex justify-between items-start pt-2 pb-2" onClick={() => router.push(`/dashboard/staff/${enrollee?.staff_id}`)}>
                 <div className="flex gap-2">
                     <span className="bg-[#A6AFC2] w-[32px] h-[32px] rounded-full flex items-center justify-center">
                         <UserIcon className="h-5 w-5 text-white" />

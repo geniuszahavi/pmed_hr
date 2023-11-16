@@ -4,10 +4,43 @@ import { useState, useEffect } from "react";
 import icon from "@/assets/insurer-icon.png";
 import Image from "next/image";
 import { withProtected } from "@/hooks/routes";
-
+import axios from "axios";
 
 function OrganizationStaff() {
     const [openModal, setOpenModel] = useState(false);
+    const updateDependants = async () => {
+        console.log('working')
+        const formData = new FormData() 
+        console.log({formData})
+
+        formData.append('staff_id', values.staff_id)
+        formData.append('first_name', values.first_name)
+        formData.append('last_name', values.last_name)
+        formData.append('email_address', values.email_address)
+        formData.append('dob', values.dob)
+        formData.append('gender', values.gender)
+        formData.append('phone_number', values.phone_number)
+        formData.append('nationality', values.nationality)
+        formData.append('address', values.address)
+        formData.append('state_of_origin', values.state_of_origin)
+        formData.append('preferred_hospital_location', values.preferred_hospital_location)
+        formData.append('preferred_hospital', values.preferred_hospital)
+        formData.append('relationship_with_staff', values.relationship_with_staff)
+
+          
+        axios.post('https://api.coderigi.co/staff/add_dependants.php', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+     
+      };
 
 ;    return (
         <>

@@ -56,55 +56,58 @@ function Enrolment({ auth }) {
     }
 
     const uploadFile = async (e) => {
-        e.preventDefault()
-        console.log(file);
         e.preventDefault();
-
+      
         if (!file) {
-            return;
+          return;
         }
+      
         try {
-            let formData = new FormData();
-            formData.append("file", file);
-            formData.append("organization_id", JSON.parse(localStorage.getItem("plateaumed_hr_user")).insurer_id);
-        
-            const options = {
-              headers: {
+          let formData = new FormData();
+          formData.append("file", file);
+          formData.append("organization_id", JSON.parse(localStorage.getItem("plateaumed_hr_user")).insurer_id);
+        //   const options = {
+        //     headers: {
+        //       'Content-Type': 'multipart/form-data'
+        //     },
+        //     onUploadProgress: (progressEvent) => {
+        //       if (progressEvent.lengthComputable) {
+        //         const percentage = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+        //         console.log(percentage);
+        //         setProgress(percentage);
+        //       } else if (progressEvent.loaded && progressEvent.total) {
+        //         // Use loaded and total properties if lengthComputable is not available
+        //         console.log(Math.round((progressEvent.loaded / progressEvent.total) * 100));
+        //         setProgress(Math.round((progressEvent.loaded / progressEvent.total) * 100));
+        //       }
+        //     },
+        //   };
+      
+          const response = await axios.post("https://api.coderigi.co/hr/add.php", formData, {
+            headers: {
                 'Content-Type': 'multipart/form-data'
               },
-              onUploadProgress: (progressEvent) => {
-                console.log('progressEvent', progressEvent)
-                // const { loaded, total } = progressEvent;
-                // console.log(loaded);
-                // console.log(total);
-                // const percentage = (loaded / total) * 100;
-                // setProgress(percentage.toFixed(2));     
-              },
-            };
-        
-            const response = await axios({
-                method: "POST",
-                url: "https://api.coderigi.co/hr/add.php",
-                data: formData,
-                options
-            })
-            console.log("File was uploaded successfylly:", response);
-            if(response.data?.message) {
-                setOpenModal(false);
-                setFile(null)
-                setOpenSuccessModal(true);
-                listStaffs();
-            }
-
-          } catch (e) {
-            console.error(e);
-            const error =
-              e.response && e.response.data
-                ? e.response.data.error
-                : "Sorry! something went wrong.";
-            console.log(error);
+          });
+      
+          console.log("File was uploaded successfully:", response);
+      
+          if (response.data?.message) {
+            setOpenModal(false);
+            setFile(null);
+            setOpenSuccessModal(true);
+            listStaffs();
+          }
+      
+        } catch (e) {
+          console.error(e);
+          const error =
+            e.response && e.response.data
+              ? e.response.data.error
+              : "Sorry! something went wrong.";
+          console.log(error);
         }
-    }
+      }
+      
 
 
     const openEnrollee = (enrollee) => {
@@ -123,16 +126,7 @@ function Enrolment({ auth }) {
                 <SmatNav name={user?.organization_contact_first_name} openSignOut={() => setOpenSignOut(true)} />
                 <Logout visible={openSignOut} closeModal={() => setOpenSignOut(false)} logout={() => { setLogOut(true);  setOpenSignOut(false) }}  />
                 <section className="m-[32px]">
-                    {/* <div className="flex justify-between items-center mb-8">
-                        <h5 className="text-[#051438] text-[18px] font-semibold">Staff management</h5>
-                        <div className="flex items-center gap-8">
-                            <div className="flex gap-3 items-center bg-white border border-[#DFE2E9] rounded-[10px]  pr-[20px]">
-                                <input type="text" id="search" name="search" className="w-full py-[10px] pl-[20px] rounded-l-[10px]" placeholder="Search list" />
-                                <SearchIcon className="h-5 w-5" />
-                            </div>
-                            <SmallButton text="Upload staff details" onClick={() => setOpenModal(true)} />
-                        </div>
-                    </div> */}
+                    
 
                     <div className="flex justify-between items-center mb-8">
                         <h5 className="text-[#051438] text-[18px] font-semibold">Staff management</h5>
