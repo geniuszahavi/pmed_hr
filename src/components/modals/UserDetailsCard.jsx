@@ -56,8 +56,21 @@ function UserDetailsCard({ visible, staff, id, closeModal }) {
                 </div>
               </div>
             </div>
-            <h2>{selectedStaff.gender}</h2>
-            {/* Add other details you want to display */}
+
+            <div className="flex justify-between mt-6">
+                <div className="block">
+                    <p>insurance ID</p>
+                    <p className="font-bold">{selectedStaff?.insurance_id}</p>
+                </div>
+                <div className="block">
+                    <p>Plan</p>
+                    <p className="font-bold">{selectedStaff?.plan}</p>
+                </div>
+                <div className="block">
+                    <p>Effective until</p>
+                    <p className="font-bold">{selectedStaff?.date || "Not Available"}</p>
+                </div>
+            </div>
           </div>
         )}
       </div>
