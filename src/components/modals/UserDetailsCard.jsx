@@ -1,3 +1,4 @@
+import { images } from "@/assets";
 import { PlusCircleIcon, XIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 function UserDetailsCard({ visible,company, staff, id, closeModal }) {
@@ -27,7 +28,7 @@ const router = useRouter()
                 </button> */}
       <div className="flex bg-[#fff] h-[60vh] p-8 rounded-xl mt-8">
         {selectedStaff && (
-          <div className="border-xl w-[35%] h-[30vh] m-auto p-4  border details  ">
+          <div className="border-xl w-[35%]  m-auto p-4  border details  ">
             <div className="flex items-center gap-4">
             <img src={selectedStaff?.profile_image_filename
     ? `https://api.coderigi.co/staff/uploads/${selectedStaff.profile_image_filename}`
@@ -82,8 +83,7 @@ const router = useRouter()
                     <p className="font-bold">{company?.organization_name}</p>
                 </div>
                 <div className="block">
-                    <p>Effective until</p>
-                    <p className="font-bold">{selectedStaff?.date || "Not Available"}</p>
+                    <img src='https://res.cloudinary.com/dj3zrsni6/image/upload/v1700221714/samples/Rectangle_827511_qirny8.png' className="w-44 h-auto" alt="" />
                 </div>
             </div>
           </div>
