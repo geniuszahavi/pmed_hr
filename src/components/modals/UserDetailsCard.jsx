@@ -10,8 +10,6 @@ function UserDetailsCard({ visible, staff, id, closeModal }) {
   // const selectedStaff = staff?.staff_members?.find((item) => item.id === id);
   // console.log(selectedStaff)
   const selectedStaff = staff?.staff_members?.find((item) => {
-    console.log("item.staff_id:", item.staff_id);
-    console.log("id:", id);
     return item.staff_id === id;
   });
   console.log( selectedStaff );

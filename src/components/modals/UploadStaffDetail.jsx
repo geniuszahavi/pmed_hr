@@ -32,7 +32,12 @@ function UploadStaffDetailModal({ visible, uploadFile, onFileChange, file, close
                        
                         <input id="file" name="file" onChange={onFileChange} type="file" className="hidden" />
                     </label>
-                    <Link href="../../assets/staff_.csv" download="staff_" className="text-[#0B0C7D] bg-white rounded-[10px] py-[12px] px-[16px] border border-[#0B0C7D] text-center font-semibold">Download sample CSV here</Link>
+                    <Link href="/staff_.csv" passHref legacyBehavior>
+            <a className="text-[#0B0C7D] bg-white rounded-[10px] py-[12px] px-[16px] border border-[#0B0C7D] text-center font-semibold" download>
+              Download sample CSV here
+            </a>
+          </Link>
+                    {/* <Link href="../../assets/staff_.csv" download="staff_" className="text-[#0B0C7D] bg-white rounded-[10px] py-[12px] px-[16px] border border-[#0B0C7D] text-center font-semibold">Download sample CSV here</Link> */}
                 </div> 
 
 
