@@ -1,18 +1,11 @@
 import { PlusCircleIcon, XIcon } from "@heroicons/react/outline";
-import building from "@/assets/building.png";
-import { SmallButton } from "..";
-import Image from "next/image";
-import { images } from "@/assets";
-import bg_img from "../../assets/bg_card.png";
-
-function UserDetailsCard({ visible, staff, id, closeModal }) {
-  console.log(id);
-  // const selectedStaff = staff?.staff_members?.find((item) => item.id === id);
-  // console.log(selectedStaff)
+import { useRouter } from "next/router";
+function UserDetailsCard({ visible,company, staff, id, closeModal }) {
   const selectedStaff = staff?.staff_members?.find((item) => {
     return item.staff_id === id;
   });
-  console.log( selectedStaff );
+const router = useRouter()
+
   return (
     <div
       className={`${
@@ -21,12 +14,25 @@ function UserDetailsCard({ visible, staff, id, closeModal }) {
           : "hidden"
       }`}
     >
-      <h2>Generate Physical Card</h2>
+      <div className="mb-8 flex justify-between items-center">
+      <h2 className="font-bold text-2xl">Generate Physical Card</h2>
+
+                <button className="w-[32px] h-[32px] rounded-full flex justify-center items-center bg-[#DFE2E9]" onClick={ ()=> router.push('/dashboard/staff') }>
+                    <XIcon className="w-5 h-5" />
+                </button>
+            </div>
+
+      {/* <button className="w-[32px] h-[32px] rounded-full flex justify-center items-center bg-[#DFE2E9]" onClick={closeModal}>
+                    <XIcon className="w-5 h-5" />
+                </button> */}
       <div className="flex bg-[#fff] h-[60vh] p-8 rounded-xl mt-8">
         {selectedStaff && (
-          <div className="border-xl w-[50%] h-[30vh] m-auto p-4  border details  ">
+          <div className="border-xl w-[35%] h-[30vh] m-auto p-4  border details  ">
             <div className="flex items-center gap-4">
-            <img src= {`https://api.coderigi.co/staff/uploads/${selectedStaff?.profile_image_filename}`}  className="w-44" alt="" />
+            <img src={selectedStaff?.profile_image_filename
+    ? `https://api.coderigi.co/staff/uploads/${selectedStaff.profile_image_filename}`
+    : `https://res.cloudinary.com/dj3zrsni6/image/upload/v1700219287/samples/avatar-1_hxeiex.png` 
+  }  className="w-44" alt="" />
               <div className="flex flex-col gap-6 w-full">
                 <div className="block">
                   <h2>Enrolee name</h2>
@@ -73,7 +79,7 @@ function UserDetailsCard({ visible, staff, id, closeModal }) {
             <div className="flex justify-between mt-6">
                 <div className="block">
                     <p>Company Name</p>
-                    <p className="font-bold">{selectedStaff?.insurance_id}</p>
+                    <p className="font-bold">{company?.organization_name}</p>
                 </div>
                 <div className="block">
                     <p>Effective until</p>

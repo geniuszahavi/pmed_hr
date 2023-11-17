@@ -37,10 +37,7 @@ function UploadStaffDetailModal({ visible, uploadFile, onFileChange, file, close
               Download sample CSV here
             </a>
           </Link>
-                    {/* <Link href="../../assets/staff_.csv" download="staff_" className="text-[#0B0C7D] bg-white rounded-[10px] py-[12px] px-[16px] border border-[#0B0C7D] text-center font-semibold">Download sample CSV here</Link> */}
                 </div> 
-
-
                 { file !== null && <div>
                     <h5 className="text-[#051438] text-[24px] font-semibold mb-4">Upload files {progress}</h5>
                     <div className="bg-white rounded-[10px] p-[16px] border border-[#DFE2E9] mb-4 flex gap-6 items-center">

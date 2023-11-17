@@ -31,8 +31,16 @@ function OrganizationStaffSingle({ auth }) {
   const [openDetails, setOpenDetails] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [staffs, setStaffs] = useState(null);
+  const [company, setCompany] = useState([])
+
   useEffect(() => {
-    listStaffs();
+    listStaffs()
+    // getCompany()
+    getCompany().then((result) => {
+      console.log('Data from the resolved promise:', result);
+    }).catch((error) => {
+      console.error('Error from the resolved promise:', error);
+    });
   }, []);
 
   console.log({ staffs });
@@ -50,7 +58,23 @@ function OrganizationStaffSingle({ auth }) {
       console.log(error);
     }
   };
+  const getCompany = async () => {
+    try {
+      const response = await axios.get(`https://api.coderigi.co/staff/companyName.php?staff_id=${6996}`);
+      const data = response.data;
+      console.log(data);
+      setCompany(data);
+      return data; // You can also return the data if needed
+    } catch (error) {
+      console.error(error);
+      // Handle errors if needed
+      throw error; // You may want to rethrow the error if necessary
+    }
+  };
 
+
+ 
+console.log(company)
   return (
     <>
       <main className="bg-[#EDF0F8] ">
@@ -186,6 +210,7 @@ function OrganizationStaffSingle({ auth }) {
         </section>
         <UserDetailsCard 
         id={id}
+        company={company}
         staff = {staffs}
         visible={openDetails}
         closeDetails={() => setOpenDetails(false)}
