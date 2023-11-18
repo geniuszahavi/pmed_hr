@@ -1,5 +1,6 @@
 import {
   Dependant,
+  EditEnrolleeModal,
   EnrolleeInfo,
   Logout,
   SmallButton,
@@ -27,6 +28,7 @@ function OrganizationStaffSingle({ auth }) {
   const { setUser, user } = auth;
   const [setLogOut] = useLogOut();
   const [openModal, setOpenModal] = useState(false);
+  const [openEnrolleeModal, setOpenEnrolleeModal] = useState(false);
   const [openSignOut, setOpenSignOut] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -64,11 +66,11 @@ function OrganizationStaffSingle({ auth }) {
       const data = response.data;
       console.log(data);
       setCompany(data);
-      return data; // You can also return the data if needed
+      return data
     } catch (error) {
       console.error(error);
-      // Handle errors if needed
-      throw error; // You may want to rethrow the error if necessary
+     
+      throw error
     }
   };
 
@@ -78,8 +80,10 @@ console.log(company)
   return (
     <>
       <main className="bg-[#EDF0F8] ">
-        {/* <EditEnrolleeModal visible={openModal} closeModal={() => setOpenModel(false)} /> */}
         <Success visible={openModal} closeModal={() => setOpenModal(false)} />
+        <EditEnrolleeModal visible={openEnrolleeModal} closeModal={() => setOpenEnrolleeModal(false)}
+         enrollee={staffs}
+           />
 
         <SmatNav
           name={user?.organization_contact_first_name}
@@ -108,11 +112,11 @@ console.log(company)
             </div>
           <div className="flex gap-5">
 
-            <button className="bg-[#fff] text-[#0B0C7D] px-4 rounded-lg flex items-center gap-4" onClick={()=> setOpenDetails(true)}> <span>Download </span>  <FaAngleDown />
+            <button className="bg-[#fff] text-[#0B0C7D] px-4 rounded-lg flex items-center gap-4" onClick={()=> setOpenDetails(true)}> <span>Physical Id card </span>  <FaAngleDown />
  </button>
             <SmallButton
               text="Edit enrollee info"
-              onClick={() => router.push(`/dashboard/staff/${enrolleeId}`)}
+              onClick={() => setOpenEnrolleeModal(true)}
             />
           </div>
 

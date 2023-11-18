@@ -1,7 +1,7 @@
 import { SmallButton } from "..";
 
 
-function DependantForm() {
+function DependantForm({dependants}) {
     return (
         <form className="h-full">
             <div className="bg-white rounded-[10px] p-[16px] border border-[#DFE2E9] mb-4 h-[512px]">

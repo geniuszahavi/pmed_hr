@@ -5,6 +5,8 @@ import toast, { Toaster } from "react-hot-toast";
 
 
 function PrimaryEnrolleeForm({ enrollee }) {
+
+    console.log("primary enrolee modal", enrollee)
     let userSchema = object({
         gender: string().min(3, "Organization name must be at least 8 characters long").required("Organization is required"),
         dob: string().min(3, "First name must be at least 8 characters long").required("Contact Person First Name is required"),
