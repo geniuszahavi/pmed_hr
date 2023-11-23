@@ -49,8 +49,8 @@ function EditEnrolleeModal({ visible, closeModal, enrollee }) {
 
             {activeTab === 'dependants' && enrollee.dependants ? <> 
             {
-                enrollee?.dependants?.map((item)=>(
-                   <DependantForm dependants={item} />
+                enrollee?.dependants?.map((item, index)=>(
+                   <DependantForm dependants={item} key={index} />
                )) 
 
             }
