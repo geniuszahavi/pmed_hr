@@ -10,11 +10,21 @@ function EditEnrolleeModal({ visible, closeModal, enrollee }) {
     };
 
     return (
-        <div className={`${visible ? "bg-[#EDF0F8] fixed top-0 w-full h-full py-[16px] px-[32px]" : "hidden"}`}>
+
+        <div  className={`${
+            visible
+              ? "fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-50 z-50"
+              : "hidden"
+          }`}>
+            
+        <div className={`${ visible
+            ? "bg-[#EDF0F8] fixed w-[80%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 py-[16px] px-[32px] z-[200]"
+            : "hidden"
+        }`}>
             <div className="mb-8 flex justify-between items-center">
                 <h4 className="text-[18px] text-[#051438] font-semibold">Edit enrollee information</h4>
                 <button className="w-[32px] h-[32px] rounded-full flex justify-center items-center bg-[#DFE2E9]" onClick={closeModal}>
-                    <XIcon className="w-5 h-5" />
+                    <XIcon className="w-5 h-5 text-[#000]" />
                 </button>
             </div>
 
@@ -46,11 +56,10 @@ function EditEnrolleeModal({ visible, closeModal, enrollee }) {
             }
             
             </>:
-            <>
-            <h2 className='text-[#000]'>Add a dependants</h2>
-            </>
+           null
             
             }
+        </div>
         </div>
     );
 }

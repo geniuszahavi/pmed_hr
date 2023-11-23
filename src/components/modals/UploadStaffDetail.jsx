@@ -8,10 +8,18 @@ import { useState } from "react";
 import axios from "axios";
 
 
-function UploadStaffDetailModal({ visible, uploadFile, onFileChange, file, closeModal, progress }) {
+function UploadStaffDetailModal({ visible,disabled, uploadFile, onFileChange, file, closeModal, progress }) {
     
     return (
-        <div className={`${visible ? "bg-[#EDF0F8] fixed top-0 w-full h-screen py-[16px] px-[32px] z-[200] " : "hidden"}`}>
+        <div className={`${
+            visible
+              ? "fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-50 z-50"
+              : "hidden"
+          }`}>
+<div  className={`${ visible
+            ? "bg-[#EDF0F8] fixed w-[80%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 py-[16px] px-[32px] z-[200]"
+            : "hidden"
+        }`}>
 
             <div className="mb-6 flex justify-between items-center">
                 <h4 className="text-[18px] text-[#051438] font-semibold">Upload staff details</h4>
@@ -38,7 +46,7 @@ function UploadStaffDetailModal({ visible, uploadFile, onFileChange, file, close
             </a>
           </Link>
                 </div> 
-                { file !== null && <div>
+                {/* { file !== null && <div>
                     <h5 className="text-[#051438] text-[24px] font-semibold mb-4">Upload files {progress}</h5>
                     <div className="bg-white rounded-[10px] p-[16px] border border-[#DFE2E9] mb-4 flex gap-6 items-center">
                         
@@ -72,10 +80,72 @@ function UploadStaffDetailModal({ visible, uploadFile, onFileChange, file, close
                     <div className="flex justify-end">
                         <SmallButton text="Save" type="submit" />
                     </div>
-                </div> }
+                </div> } */}
 
-                
+{progress > 0 && (
+              <div>
+                <h5 className="text-[#051438] text-[24px] font-semibold mb-4">
+                  Upload files
+                </h5>
+                <div className="bg-white rounded-[10px] p-[16px] border border-[#DFE2E9] mb-4 flex gap-6 items-center">
+                  <Image
+                    src={smallDocument}
+                    width="40"
+                    height=""
+                    alt=""
+                    className=""
+                  />
+
+                  <div className="w-full flex flex-col gap-5">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#051438] text-[16px] font-medium">
+                        {file?.name}
+                      </span>
+                      <p className="flex items-center gap-2">
+                        <span className="text-[#677597] text-[14px] font-medium">
+                          {progress < 100
+                            ? `${((file?.size || 0) / 1024).toFixed(2)}KB`
+                            : `${(file?.size / 1024).toFixed(2)}KB`}
+                        </span>
+                        <span className="flex h-[10px] w-[1px] bg-[#677597]"></span>
+                        <span className="text-[#677597] text-[14px] font-medium">
+                          {progress < 100 ? "Uploading" : "Completed"}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="w-full bg-[#DFE2E9] rounded-[6px] relative flex h-[6px]">
+                      <div
+                        className="w-[80%] h-full bg-[#0000CC] rounded-[6px]"
+                        style={{ width: `${progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+
+              {/* <SmallButton text="Save" onClick={} /> */}
+            </div>
+          
+                  <button
+                    className="w-[32px] h-[32px] rounded-full flex justify-center items-center bg-[#DFE2E9]"
+                    onClick={closeModal}
+                  >
+                    <XIcon className="w-5 h-5" />
+                  </button>
+                </div>
+               <div className="flex justify-end">
+
+                <SmallButton
+                text="Save"
+                onClick={uploadFile}
+                disabled={disabled}
+              />
+               </div>
+              </div>
+            )}
+
             </form>
+
+</div>
 
         </div>
     );

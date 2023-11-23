@@ -23,11 +23,13 @@ function Enrolment({ auth }) {
     const [progress, setProgress] = useState(0);
     const [enrollee, setEnrollee] = useState(null);
 
-    
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [saveButtonDisabled, setSaveButtonDisabled] = useState(false);
+  
 
     useEffect(() => {
         listStaffs()
-    }, [])
+    },[])
 
     const listStaffs = async () => {
         setDisabled(true);
@@ -41,72 +43,106 @@ function Enrolment({ auth }) {
             console.log(error);
         }
     }
-
-    const openOrg = async (id) => {
-        console.log(id);
-        // const response = await InsurerService.fetchOrganization(id);
-        // console.log(response);
-        router.push(`/dashboard/enrolment/${id}`);
-    }
-
-
-    const onFileChange = (e) => {
-        setFile(e.target.files[0])
-        console.log(e.target.files[0]);
-    }
-
-    const uploadFile = async (e) => {
-        e.preventDefault();
-      
-        if (!file) {
-          return;
+    useEffect(() => {
+        let interval;
+    
+        if (uploadProgress > 0 && uploadProgress < 100) {
+          interval = setInterval(() => {
+            setUploadProgress((prevProgress) => Math.min(prevProgress + 1, 100));
+          }, 100);
+          setSaveButtonDisabled(true);
+        } else {
+          clearInterval(interval);
+          setSaveButtonDisabled(false);
         }
+    
+        return () => clearInterval(interval);
+      }, [uploadProgress]);
+    
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+        setFile(selectedFile);
+        setUploadProgress(1);
+      };
+    
+      const handleUpload = async (e) => {
+        e.preventDefault();
+        if (file) {
       
-        try {
-          let formData = new FormData();
-          formData.append("file", file);
-          formData.append("organization_id", JSON.parse(localStorage.getItem("plateaumed_hr_user")).insurer_id);
-        //   const options = {
-        //     headers: {
-        //       'Content-Type': 'multipart/form-data'
-        //     },
-        //     onUploadProgress: (progressEvent) => {
-        //       if (progressEvent.lengthComputable) {
-        //         const percentage = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-        //         console.log(percentage);
-        //         setProgress(percentage);
-        //       } else if (progressEvent.loaded && progressEvent.total) {
-        //         // Use loaded and total properties if lengthComputable is not available
-        //         console.log(Math.round((progressEvent.loaded / progressEvent.total) * 100));
-        //         setProgress(Math.round((progressEvent.loaded / progressEvent.total) * 100));
-        //       }
-        //     },
-        //   };
-      
-          const response = await axios.post("https://api.coderigi.co/hr/add.php", formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-              },
-          });
-      
-          console.log("File was uploaded successfully:", response);
-      
-          if (response.data?.message) {
-            setOpenModal(false);
-            setFile(null);
-            setOpenSuccessModal(true);
-            listStaffs();
-          }
-      
-        } catch (e) {
-          console.error(e);
+          try {
+            let formData = new FormData();
+            formData.append("file", file);
+            formData.append("organization_id", JSON.parse(localStorage.getItem("plateaumed_hr_user")).insurer_id);
+            const response = await axios.post(
+              "https://api.coderigi.co/hr/add.php",
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+                onUploadProgress: (progressEvent) => {
+                  const percentage = Math.round(
+                    (progressEvent.loaded * 100) / progressEvent.total
+                  );
+                  setUploadProgress(percentage);
+                },
+              }
+            );
+            console.log(response)
+
+            if (response.data?.message) {
+                setOpenModal(false);
+                setFile(null);
+                setOpenSuccessModal(true);
+                listStaffs();
+              }
+            
+          } catch (e) {
+            console.error(e);
           const error =
             e.response && e.response.data
               ? e.response.data.error
               : "Sorry! something went wrong.";
           console.log(error);
+          }
         }
-      }
+      };
+    // const uploadFile = async (e) => {
+    //     e.preventDefault();
+      
+    //     if (!file) {
+    //       return;
+    //     }
+      
+    //     try {
+    //       let formData = new FormData();
+    //       formData.append("file", file);
+    //       formData.append("organization_id", JSON.parse(localStorage.getItem("plateaumed_hr_user")).insurer_id);
+            
+    //       const response = await axios.post("https://api.coderigi.co/hr/add.php", formData, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data'
+    //           },
+    //       });
+      
+    //       console.log("File was uploaded successfully:", response);
+      
+    //       if (response.data?.message) {
+    //         setOpenModal(false);
+    //         setFile(null);
+    //         setOpenSuccessModal(true);
+    //         listStaffs();
+    //       }
+      
+    //     } catch (e) {
+    //       console.error(e);
+    //       const error =
+    //         e.response && e.response.data
+    //           ? e.response.data.error
+    //           : "Sorry! something went wrong.";
+    //       console.log(error);
+    //     }
+    //   }
       
 
 
@@ -120,7 +156,7 @@ function Enrolment({ auth }) {
     return (
         <>
             <main className="bg-[#EDF0F8] h-screen">
-                <UploadStaffDetailModal uploadFile={uploadFile} file={file} onFileChange={onFileChange} visible={openModal} closeModal={() => setOpenModal(false)} />
+                <UploadStaffDetailModal disabled={saveButtonDisabled} uploadFile={handleUpload}  progress ={uploadProgress} file={file} onFileChange={handleFileChange} visible={openModal} closeModal={() => setOpenModal(false)} />
                 <Success visible={openSuccess} title="Staff list submitted successfully!" description="Your staff list has been submitted to Smathealth Medicare Limited"
                     closeModal={() => setOpenSuccessModal(false)} />
                 <SmatNav name={user?.organization_contact_first_name} openSignOut={() => setOpenSignOut(true)} />

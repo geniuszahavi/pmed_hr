@@ -1,39 +1,52 @@
-import { images } from "@/assets";
-import { PlusCircleIcon, XIcon } from "@heroicons/react/outline";
+import { XIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
-function UserDetailsCard({ visible,company, staff, id, closeModal }) {
+import { useState } from "react";
+import { Success } from "..";
+function UserDetailsCard({ visible, company, staff, id, closeDetails }) {
   const selectedStaff = staff?.staff_members?.find((item) => {
     return item.staff_id === id;
   });
-const router = useRouter()
+  const router = useRouter();
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <div
       className={`${
         visible
-          ? "bg-[#EDF0F8] fixed top-0 w-full h-full py-[16px] text-[#000] px-[32px] z-[200] bg-cover bg-center bg-no-repeat "
+          ? "bg-[#EDF0F8] fixed top-0 w-full h-full py-[16px] text-[#000] px-[45px] z-[1111111] bg-cover bg-center bg-no-repeat "
           : "hidden"
       }`}
     >
+      <Success
+        visible={openModal}
+        closeModal={() => setOpenModal(false)}
+        title={"Physical ID cards generated successfully!"}
+        description={"Physical ID cards  format have been updated"}
+      />
       <div className="mb-8 flex justify-between items-center">
-      <h2 className="font-bold text-2xl">Generate Physical Card</h2>
+        <h2 className="font-bold text-2xl">Generate Physical Card</h2>
 
-                <button className="w-[32px] h-[32px] rounded-full flex justify-center items-center bg-[#DFE2E9]" onClick={ ()=> router.push('/dashboard/staff') }>
-                    <XIcon className="w-5 h-5" />
-                </button>
-            </div>
+        <button
+          className="w-[32px] h-[32px] rounded-full flex justify-center items-center bg-[#DFE2E9]"
+          onClick={() => closeDetails && closeDetails()}
+        >
+          <XIcon className="w-5 h-5" />
+        </button>
+      </div>
 
-      {/* <button className="w-[32px] h-[32px] rounded-full flex justify-center items-center bg-[#DFE2E9]" onClick={closeModal}>
-                    <XIcon className="w-5 h-5" />
-                </button> */}
-      <div className="flex bg-[#fff] h-[60vh] p-8 rounded-xl mt-8">
+      <div className="flex flex-col items-end bg-[#fff] h-[60vh] p-8 rounded-xl mt-8">
         {selectedStaff && (
           <div className="border-xl w-[35%]  m-auto p-4  border details  ">
             <div className="flex items-center gap-4">
-            <img src={selectedStaff?.profile_image_filename
-    ? `https://api.coderigi.co/staff/uploads/${selectedStaff.profile_image_filename}`
-    : `https://res.cloudinary.com/dj3zrsni6/image/upload/v1700219287/samples/avatar-1_hxeiex.png` 
-  }  className="w-44" alt="" />
+              <img
+                src={
+                  selectedStaff?.profile_image_filename
+                    ? `https://api.coderigi.co/staff/uploads/${selectedStaff.profile_image_filename}`
+                    : `https://res.cloudinary.com/dj3zrsni6/image/upload/v1700219287/samples/avatar-1_hxeiex.png`
+                }
+                className="w-44"
+                alt=""
+              />
               <div className="flex flex-col gap-6 w-full">
                 <div className="block">
                   <h2>Enrolee name</h2>
@@ -63,31 +76,46 @@ const router = useRouter()
             </div>
 
             <div className="flex justify-between mt-6">
-                <div className="block">
-                    <p>insurance ID</p>
-                    <p className="font-bold">{selectedStaff?.insurance_id}</p>
-                </div>
-                <div className="block">
-                    <p>Plan</p>
-                    <p className="font-bold">{selectedStaff?.plan}</p>
-                </div>
-                <div className="block">
-                    <p>Effective until</p>
-                    <p className="font-bold">{selectedStaff?.date || "Not Available"}</p>
-                </div>
+              <div className="block">
+                <p>insurance ID</p>
+                <p className="font-bold">{selectedStaff?.insurance_id}</p>
+              </div>
+              <div className="block">
+                <p>Plan</p>
+                <p className="font-bold">{selectedStaff?.plan}</p>
+              </div>
+              <div className="block">
+                <p>Effective until</p>
+                <p className="font-bold">
+                  {selectedStaff?.date || "Not Available"}
+                </p>
+              </div>
             </div>
 
             <div className="flex justify-between mt-6">
-                <div className="block">
-                    <p>Company Name</p>
-                    <p className="font-bold">{company?.organization_name}</p>
-                </div>
-                <div className="block">
-                    <img src='https://res.cloudinary.com/dj3zrsni6/image/upload/v1700221714/samples/Rectangle_827511_qirny8.png' className="w-44 h-auto" alt="" />
-                </div>
+              <div className="block">
+                <p>Company Name</p>
+                <p className="font-bold">{company?.organization_name}</p>
+              </div>
+              <div className="block">
+                <img
+                  src="https://res.cloudinary.com/dj3zrsni6/image/upload/v1700221714/samples/Rectangle_827511_qirny8.png"
+                  className="w-44 h-auto"
+                  alt=""
+                />
+              </div>
             </div>
           </div>
         )}
+      </div>
+      <div className="flex justify-end mt-7">
+        <button
+          className="bg-[#0B0C7D] px-9 py-5 rounded-2xl ml-auto text-[#fff] text-lg font-semibold"
+          onClick={() => setOpenModal(true)}
+        >
+          {" "}
+          Generate
+        </button>
       </div>
     </div>
   );

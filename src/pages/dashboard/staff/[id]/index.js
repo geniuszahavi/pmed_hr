@@ -19,6 +19,8 @@ import axios from "axios";
 import InsurerService from "@/services/InsurerService";
 import { FaAngleDown } from "react-icons/fa";
 import UserDetailsCard from "@/components/modals/UserDetailsCard";
+import Link from "next/link";
+import Menu from "@/components/popup/Menu";
 
 function OrganizationStaffSingle({ auth }) {
   const router = useRouter();
@@ -74,12 +76,25 @@ function OrganizationStaffSingle({ auth }) {
     }
   };
 
-
+    const [isOpen, setIsOpen] = useState(false);
+  
+    const toggleDropdown = () => {
+      setIsOpen(!isOpen);
+    };
+  
+    const closeDropdown = () => {
+      setIsOpen(false);
+    };
  
+const first_name = staffs?.staff_members?.map((item)=> {return item?.first_name})
+const middle_name = staffs?.staff_members?.map((item)=> {return item?.middle_name})
+const last_name = staffs?.staff_members?.map((item)=> {return item?.last_name})
+
+const username = first_name + ' '+ middle_name + " " + last_name
 console.log(company)
   return (
     <>
-      <main className="bg-[#EDF0F8] ">
+      <main className="bg-[#EDF0F8] h-screen">
         <Success visible={openModal} closeModal={() => setOpenModal(false)} />
         <EditEnrolleeModal visible={openEnrolleeModal} closeModal={() => setOpenEnrolleeModal(false)}
          enrollee={staffs}
@@ -101,19 +116,22 @@ console.log(company)
         <section className="p-[32px] ">
           <div className="flex justify-between items-center mb-8">
             <div className="flex gap-2 items-center">
+              <Link href={'/dashboard/staff'}>
               <ChevronLeftIcon className="h-5 w-5 text-[#051438]" />
+              </Link>
               <h5 className="text-[#677597] text-[16px] font-semibold">
                 Staff enrolment details
               </h5>
 
               <ChevronDoubleRightIcon className="h-5 w-5 text-[#051438]" />
 
-              <h5 className="text-[#051438] text-[16px] font-semibold"></h5>
+              <h5 className="text-[#051438] text-[16px] font-semibold">{username}</h5>
             </div>
           <div className="flex gap-5">
 
-            <button className="bg-[#fff] text-[#0B0C7D] px-4 rounded-lg flex items-center gap-4" onClick={()=> setOpenDetails(true)}> <span>Physical Id card </span>  <FaAngleDown />
- </button>
+      
+
+
             <SmallButton
               text="Edit enrollee info"
               onClick={() => setOpenEnrolleeModal(true)}
@@ -122,12 +140,7 @@ console.log(company)
 
           </div>
 
-          {/* <div className="h-[582px] flex justify-center items-center overflow-scroll">
-                        <div className="bg-white rounded-[10px] border border-[#DFE2E9] p-[16px] flex flex-col justify-center items-center h-[360px] w-[640px]">
-                            <Image src={icon} width="120" height="" alt="" className="mb-8" />
-                            <p className="text-[#677597] text-[16px] mb-2">No data recorded</p>
-                        </div>
-                    </div> */}
+        
 
           <div className="bg-white p-[16px] rounded-[10px] mb-5">
             <div className="w-full flex gap-3 justify-between items-center mb-3">
@@ -194,7 +207,10 @@ console.log(company)
               <span className="text-[#A6AFC2] font-bold text-[16px]">
                 Dependants
               </span>
-              <span className="w-[95%] h-[1px] flex bg-[#DFE2E9]"></span>
+              <span className="text-[#A6AFC2] font-bold text-[16px]">
+                Total dependants: <span>{staffs?.total_dependents}</span>
+              </span>
+              <span className="w-[60%] h-[1px] flex bg-[#DFE2E9]"></span>
             </div>
             {staffs?.total_dependents !== 0 ? (
               <>
