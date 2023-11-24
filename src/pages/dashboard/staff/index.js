@@ -53,7 +53,7 @@ function Enrolment({ auth }) {
     } else {
       listStaffs();
     }
-  }, [currentPage, searchQuery]);
+  }, [currentPage, searchQuery, searchOrgs]);
 
   const listStaffs = async () => {
     setDisabled(true);
