@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import InsurerService from "@/services/InsurerService";
 
-function DependantForm({ key, insurerId, dependants }) {
+function DependantForm({ key, insurerId, dependants, index }) {
   const [hasPreExistingConditions, setHasPreExistingConditions] =
     useState(false);
   const [preConditions, setPreConditions] = useState([]);
@@ -168,7 +168,7 @@ function DependantForm({ key, insurerId, dependants }) {
     }
   };
   return (
-    <form key={key} className="h-full" onSubmit={editDependants}>
+    <form className="h-full" onSubmit={editDependants}>
       <div className="bg-white rounded-[10px] p-[16px] border border-[#DFE2E9] mb-4 h-full">
         <div className="flex justify-between mb-5 gap-5">
           <div className="w-full">

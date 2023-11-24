@@ -360,7 +360,7 @@ const [openSuccess, setOpenSuccessModal] = useState(false);
             <p>Selected Pre-existing Conditions:</p>
             <div className="flex gap-4">
               {preConditions.map((condition, index) => (
-                <div className="">
+                <div className="" key={index}>
                 
                 <div
                   key={index}

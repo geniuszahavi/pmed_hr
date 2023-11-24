@@ -43,7 +43,7 @@ function OrganizationStaffSingle({ auth }) {
     }).catch((error) => {
       console.error('Error from the resolved promise:', error);
     });
-  }, []);
+  });
 
   // console.log({ staffs });
   const listStaffs = async () => {
@@ -216,6 +216,16 @@ const username = first_name + ' '+ middle_name + " " + last_name
               </span>
               <span className="w-[60%] h-[1px] flex bg-[#DFE2E9]"></span>
             </div>
+
+            {
+              staffs?.total_dependents === 0 ? <>
+              <Dependant name="No data" />
+              </>:
+              <>
+              <h2>No data</h2>
+              
+              </>
+            }
             {/* {staffs?.total_dependents !== 0 ? (
               <>
                 {staffs?.total_dependents?.map(() => (
@@ -227,7 +237,6 @@ const username = first_name + ' '+ middle_name + " " + last_name
               </>
             ) : (
               <>
-                <Dependant name="No data" />
               </>
             )} */}
           </div>

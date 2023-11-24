@@ -29,7 +29,7 @@ useEffect(()=>{
 
   
 const filteredDependants = dependants.find((item)=> item.id === enrollee?.insurer_id)
-// console.log(filteredDependants)
+console.log(filteredDependants)
   return (
     <div
       className={`${
@@ -87,12 +87,12 @@ const filteredDependants = dependants.find((item)=> item.id === enrollee?.insure
 
         {activeTab === "dependants" && filteredDependants !==0 ? (
           <>
-          {
-            dependants.map((item, index)=>(
-              <DependantForm insurerId={insurer_id} staff_id={staff_id} dependants={item} key={index} />
+            <DependantForm insurerId={insurer_id} staff_id={staff_id} dependants={filteredDependants} key={filteredDependants?.dependant_id} index={filteredDependants?.dependant_id} />
+          {/* {
+            filteredDependants?.map((item, index)=>(
 
             ))
-          }
+          } */}
           </>
         ) : null}
       </div>
