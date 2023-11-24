@@ -17,16 +17,14 @@ import { withProtected } from "@/hooks/routes";
 import { useRouter } from "next/router";
 import axios from "axios";
 import InsurerService from "@/services/InsurerService";
-import { FaAngleDown } from "react-icons/fa";
 import UserDetailsCard from "@/components/modals/UserDetailsCard";
 import Link from "next/link";
-import Menu from "@/components/popup/Menu";
 
 function OrganizationStaffSingle({ auth }) {
   const router = useRouter();
   const { id } = router.query;
 //   const enrolleeId = id;
-  console.log({ id });
+  // console.log({ id });
   const { setUser, user } = auth;
   const [setLogOut] = useLogOut();
   const [openModal, setOpenModal] = useState(false);
@@ -41,20 +39,20 @@ function OrganizationStaffSingle({ auth }) {
     listStaffs()
     // getCompany()
     getCompany().then((result) => {
-      console.log('Data from the resolved promise:', result);
+      // console.log('Data from the resolved promise:', result);
     }).catch((error) => {
       console.error('Error from the resolved promise:', error);
     });
   }, []);
 
-  console.log({ staffs });
+  // console.log({ staffs });
   const listStaffs = async () => {
     setDisabled(true);
     try {
       const response = await InsurerService.listStaff(
-        JSON.parse(localStorage.getItem("plateaumed_hr_user")).insurer_id
+        JSON.parse(localStorage.getItem("plateaumed_hr_user")).id
       );
-      console.log(response);
+      // console.log(response);
       setStaffs(response.data);
       setDisabled(false);
     } catch (error) {
@@ -64,7 +62,7 @@ function OrganizationStaffSingle({ auth }) {
   };
   const getCompany = async () => {
     try {
-      const response = await axios.get(`https://api.coderigi.co/staff/companyName.php?staff_id=${6996}`);
+      const response = await axios.get(`https://api.coderigi.co/staff/companyName.php?staff_id=${id}`);
       const data = response.data;
       console.log(data);
       setCompany(data);
@@ -72,7 +70,7 @@ function OrganizationStaffSingle({ auth }) {
     } catch (error) {
       console.error(error);
      
-      throw error
+     
     }
   };
 
@@ -85,19 +83,24 @@ function OrganizationStaffSingle({ auth }) {
     const closeDropdown = () => {
       setIsOpen(false);
     };
+
+    // filteredStaff = 
+    const filteredStaffMembers = staffs?.staff_members?.filter((member) => member.staff_id === id);
+console.log(filteredStaffMembers)
  
-const first_name = staffs?.staff_members?.map((item)=> {return item?.first_name})
-const middle_name = staffs?.staff_members?.map((item)=> {return item?.middle_name})
-const last_name = staffs?.staff_members?.map((item)=> {return item?.last_name})
+const first_name = filteredStaffMembers?.map((item)=> {return item?.first_name})
+const middle_name = filteredStaffMembers?.map((item)=> {return item?.middle_name})
+const last_name = filteredStaffMembers?.map((item)=> {return item?.last_name})
+const insurer_id = filteredStaffMembers?.map((item)=> {return item?.insurer_id})
 
 const username = first_name + ' '+ middle_name + " " + last_name
-console.log(company)
+// console.log(staffs)
   return (
     <>
       <main className="bg-[#EDF0F8] h-screen">
         <Success visible={openModal} closeModal={() => setOpenModal(false)} />
-        <EditEnrolleeModal visible={openEnrolleeModal} closeModal={() => setOpenEnrolleeModal(false)}
-         enrollee={staffs}
+        <EditEnrolleeModal visible={openEnrolleeModal} insurer_id={insurer_id} staff_id={id} closeModal={() => setOpenEnrolleeModal(false)}
+         enrollee={filteredStaffMembers}
            />
 
         <SmatNav
@@ -151,7 +154,7 @@ console.log(company)
             </div>
 
             <div className="grid grid-cols-3">
-              {staffs?.staff_members.map((item) => (
+              {filteredStaffMembers?.map((item) => (
                 <>
                   <EnrolleeInfo title="First name" text={item.first_name} />
                   <EnrolleeInfo title="Middle name" text={item.middle_name} />
@@ -192,8 +195,8 @@ console.log(company)
 
                   <EnrolleeInfo
                     title="Pre-existing conditions"
-                    text={item?.pre_conditions}
-                  />
+                    text={JSON.parse(item?.pre_conditions).join(', ')}
+                    />
 
                   <EnrolleeInfo title="Insurance ID" text="ATL126575553" />
 
@@ -212,9 +215,9 @@ console.log(company)
               </span>
               <span className="w-[60%] h-[1px] flex bg-[#DFE2E9]"></span>
             </div>
-            {staffs?.total_dependents !== 0 ? (
+            {/* {staffs?.total_dependents !== 0 ? (
               <>
-                {staffs?.total_dependents.map(() => (
+                {staffs?.total_dependents?.map(() => (
                   <>
                     <Dependant name="Arthur Tommy Shelby" />
                     <Dependant name="Valerie N'kom Shelby" />
@@ -225,7 +228,7 @@ console.log(company)
               <>
                 <Dependant name="No data" />
               </>
-            )}
+            )} */}
           </div>
         </section>
         <UserDetailsCard 

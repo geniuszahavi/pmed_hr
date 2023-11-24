@@ -53,16 +53,34 @@ const InsurerService = {
 	},
 
 	listOrganization: async (id) => {
-		const response = await authAPI.get(`/insurer/companies.php?insurer_id=${id}`);
+		const response = await authAPI.get(`/hr/companies.php?insurer_id=${id}`);
 		return response;
 	},
-
-
+	updateStaff: async (formData) => {
+		const response = await authAPI.post(`/hr/edit_staff.php`, formData, {
+		  headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+		  },
+		});
+		return response;
+	  },
+	updateDependant: async (formData) => {
+		const response = await authAPI.post(`/hr/editDependants.php`, formData, {
+		  headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+		  },
+		});
+		return response;
+	  },
+	  
 	fetchOrganization: async (id) => {
-		const response = await authAPI.get(`/insurer/companyById.php?id=${id}`);
+		const response = await authAPI.get(`/hr/companyById.php?id=${id}`);
 		return response;
 	},
-
+	searchOrganization: async (id, page, perPage, query ) => {
+		const response = await authAPI.get(`/hr/search_staff.php?company_id=${id}&page=${page}&per_page=${perPage}&search=${query}`);
+		return response;
+	},
 
 	verifyEmail: async (token, email) => {
         const response = await noAuthAPI.post("auth/verify-email", {

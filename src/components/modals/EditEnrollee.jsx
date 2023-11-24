@@ -1,14 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { XIcon } from "@heroicons/react/outline";
 import { DependantForm, PrimaryEnrolleeForm } from "..";
+import axios from "axios";
 
-function EditEnrolleeModal({ visible, closeModal, enrollee }) {
+function EditEnrolleeModal({ visible,staff_id, insurer_id, closeModal, enrollee }) {
   const [activeTab, setActiveTab] = useState("primary");
+  const [dependants, setDependants] = useState([]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
+// console.log(enrollee)
 
+
+useEffect(()=>{
+  fetchDependants()
+},[])
+
+  const fetchDependants = async () => {
+    try {
+      const response = await axios.get(`https://api.coderigi.co/hr/getDependants.php?staff_id=${staff_id}`);
+// console.log("dependant form ==> ", response);
+      setDependants(response.data);
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
+  
+const filteredDependants = dependants.find((item)=> item.id === enrollee?.insurer_id)
+// console.log(filteredDependants)
   return (
     <div
       className={`${
@@ -60,15 +81,18 @@ function EditEnrolleeModal({ visible, closeModal, enrollee }) {
         </div>
 
         {activeTab === "primary" &&
-          enrollee?.staff_members?.map((item) => (
-            <PrimaryEnrolleeForm enrollee={item} key={item.id} />
+          enrollee?.map((item) => (
+            <PrimaryEnrolleeForm staff_id={staff_id} enrollee={item} key={item.id} />
           ))}
 
-        {activeTab === "dependants" && enrollee.dependants ? (
+        {activeTab === "dependants" && filteredDependants !==0 ? (
           <>
-            {enrollee?.dependants?.map((item, index) => (
-              <DependantForm dependants={item} key={index} />
-            ))}
+          {
+            dependants.map((item, index)=>(
+              <DependantForm insurerId={insurer_id} staff_id={staff_id} dependants={item} key={index} />
+
+            ))
+          }
           </>
         ) : null}
       </div>

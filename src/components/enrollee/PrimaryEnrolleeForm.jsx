@@ -1,93 +1,65 @@
-import { SmallButton } from "..";
+import { SmallButton, Success } from "..";
 import { useFormik } from "formik";
 import { object, string } from "yup";
 import toast, { Toaster } from "react-hot-toast";
 import InsurerService from "@/services/InsurerService";
 import { useState } from "react";
 import axios from "axios";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 
 function PrimaryEnrolleeForm({ enrollee, id }) {
   const [disabled, setDisabled] = useState(false);
-  const [formData, setFormData] = useState({}); // Initialize formData with an empty object
+  const [hasPreExistingConditions, setHasPreExistingConditions] =
+  useState(false);
+const [preConditions, setPreConditions] = useState([]);
+const [selectedPreCondition, setSelectedPreCondition] = useState("");
+const [openSuccess, setOpenSuccessModal] = useState(false);
 
-  let userSchema = object({
-    gender: string()
-      .min(3, "Organization name must be at least 8 characters long")
-      .required("Organization is required"),
-    dob: string()
-      .min(3, "First name must be at least 8 characters long")
-      .required("Contact Person First Name is required"),
-    first_name: string()
-      .min(3, "Last name must be at least 8 characters long")
-      .required("Contact Person First Name is required"),
-    middle_name: string()
-      .min(3, "Middle name must be at least 8 characters long")
-      .required("Contact Person Middle Name is required"),
-    last_name: string()
-      .min(3, "Last name must be at least 8 characters long")
-      .required("Contact Person Last Name is required"),
-    email: string().email().trim().required("Contact person Email is required"),
-    phone: string().trim().required("Contact person phone is required"),
-    nationality: string()
-      .trim()
-      .required("Contact person Nationality is required"),
-    sor: string().trim().required("Contact person State of Origin is required"),
-    address: string().trim().required("Contact person address is required"),
-    insurance_id: string()
-      .trim()
-      .required("Contact person Insurance ID is required"),
-    job_title: string().trim().required("Job title is required"),
-    level: string().trim().required("Level is required"),
-    staff_id: string().trim().required("Staff ID is required"),
+
+  const [formData, setFormData] = useState({
+    gender: enrollee?.gender || "",
+    preConditions: enrollee?.pre_conditions || [],
+    first_name: enrollee?.first_name || "",
+    middle_name: enrollee?.middle_name || "",
+    last_name: enrollee?.last_name || "",
+    email: enrollee?.email || "",
+    phone: enrollee?.phone_number || "",
+    nationality: enrollee?.nationality || "",
+    state_of_origin: enrollee?.state_of_origin || "",
+    address: enrollee?.address || "",
+    insurance_id: enrollee?.insurance_id || "",
+    job_title: enrollee?.job_title || "",
+    level: enrollee?.level || "",
+    staff_id: enrollee?.staff_id || "",
   });
 
-  const {
-    values,
-    errors,
-    touched,
-    isSubmitting,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-  } = useFormik({
-    initialValues: {
-      gender: "",
-      dob: "",
-      first_name: "",
-      middle_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
-      nationality: "",
-      sor: "",
-      address: "",
-      insurance_id: "",
-      job_title: "",
-      level: "",
-      staff_id: "",
-    },
-    validationSchema: userSchema,
-  });
+// console.log(formData)
+// console.log(preConditions)
 
   const editStaff = async (event) => {
     event.preventDefault();
     console.log("Testing....");
     setDisabled(true);
     try {
+      setFormData((prevData) => ({
+        ...prevData,
+        preConditions,
+      }));
+
       console.log("Logining........");
-    //   await axios.post(`https://api.coderigi.co/insurer/getDependants.php?staff_id${enrollee?.staff_id}`, formData);
-      const response = await InsurerService.updateStaff(
-        enrollee?.staff_id,
-        values.first_name,
-        values.middle_name,
-        values.last_name,
-        values.dob,
-        values.phone,
-        values.nationality,
-        values.sor,
-        values.address
-      );
-      console.log(response);
+      const formDataObject = new FormData();
+      formDataObject.append("staff_id", enrollee?.staff_id,);
+      formDataObject.append("first_name", formData.first_name);
+      formDataObject.append("last_name", formData.last_name);
+      formDataObject.append("address", formData.address);
+      formDataObject.append("phone_number", formData.phone);
+      formDataObject.append("middle_name", formData.middle_name);
+      formDataObject.append("nationality", formData.nationality);
+      formDataObject.append("pre_conditions", JSON.stringify(preConditions));
+
+      const response = await InsurerService.updateStaff( formDataObject);
+      // console.log(response);
+      setOpenSuccessModal(true)
       toast.success(response.data.message);
       setDisabled(false);
     } catch (error) {
@@ -104,36 +76,37 @@ function PrimaryEnrolleeForm({ enrollee, id }) {
     });
   };
 
-//   const handleSubmit = async () => {
-//     try {
-//       const response = await axios.post(`https://api.coderigi.co/insurer/getDependants.php?staff_id${staff_id}`, formData);
-//       console.log(response.data);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
-const [hasPreExistingConditions, setHasPreExistingConditions] =
-useState(false);
-const [preConditions, setPreConditions] = useState([]);
-const [selectedPreCondition, setSelectedPreCondition] = useState("");
 
-const handleRadioChange = (event) => {
-setHasPreExistingConditions(event.target.value === "yes");
-};
-const handleSelectChange = (e) => {
-setSelectedPreCondition(e.target.value);
-};
+  
+  const handleRadioChange = (event) => {
+    setHasPreExistingConditions(event.target.value === "yes");
+  };
+  const handleSelectChange = (e) => {
+    setSelectedPreCondition(e.target.value);
+  };
 
-const handleAddSelection = (e) => {
-e.preventDefault(); 
+  const handleAddSelection = (e) => {
+    e.preventDefault();
 
-setPreConditions([...preConditions, selectedPreCondition]);
-setSelectedPreCondition('');
-};
+    setPreConditions([...preConditions, selectedPreCondition]);
+    setSelectedPreCondition("");
+  };
 
+  const handleRemoveSelection = (index) => {
+    const updatedPreConditions = [...preConditions];
+    updatedPreConditions.splice(index, 1);
+    setPreConditions(updatedPreConditions);
+  };
 
+  const handleUpdateConditions = () => {
+    if (selectedPreCondition.trim() !== "") {
+      setPreConditions([...preConditions, selectedPreCondition]);
+      setSelectedPreCondition("");
+    }
+  };
   return (
     <form className="h-full" onSubmit={editStaff}>
+
       <div className="bg-white rounded-[10px] p-[16px] border border-[#DFE2E9] mb-4 h-full">
         <div className="flex justify-between mb-5 gap-5">
           <div className="w-full">
@@ -144,8 +117,7 @@ setSelectedPreCondition('');
               type="text"
               name="first_name"
               className="text-[#051438] w-full py-[14px] px-[20px] rounded-[10px] border border-[##DFE2E9] bg-white"
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={handleInputChange}
               defaultValue={enrollee?.first_name}
             />
           </div>
@@ -158,8 +130,8 @@ setSelectedPreCondition('');
               type="text"
               name="middle_name"
               className="text-[#051438] w-full py-[14px] px-[20px] rounded-[10px] border border-[##DFE2E9] bg-white"
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={handleInputChange}
+              // onBlur={handleBlur}
               defaultValue={enrollee?.middle_name}
             />
           </div>
@@ -172,8 +144,8 @@ setSelectedPreCondition('');
               type="text"
               name="last_name"
               className="text-[#051438] w-full py-[14px] px-[20px] rounded-[10px] border border-[##DFE2E9] bg-white"
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={handleInputChange}
+              // onBlur={handleBlur}
               defaultValue={enrollee?.last_name}
             />
           </div>
@@ -193,7 +165,7 @@ setSelectedPreCondition('');
             />
           </div>
 
-          <div className="w-full">
+          {/* <div className="w-full">
             <label className="flex mb-1 text-[12px] font-semibold">
               Date of Birth
             </label>
@@ -205,7 +177,7 @@ setSelectedPreCondition('');
               onBlur={handleBlur}
               defaultValue={enrollee?.dob}
             />
-          </div>
+          </div> */}
 
           <div className="w-full">
             <label className="flex mb-1 text-[12px] font-semibold">
@@ -216,8 +188,8 @@ setSelectedPreCondition('');
               name="phone"
               className="text-[#051438] w-full py-[14px] px-[20px] rounded-[10px] border border-[##DFE2E9] bg-white"
               placeholder="Enter organization phone"
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={handleInputChange}
+              // onBlur={handleBlur}
               defaultValue={enrollee?.phone_number}
             />
           </div>
@@ -245,8 +217,8 @@ setSelectedPreCondition('');
               type="text"
               name="nationality"
               className="text-[#051438] w-full py-[14px] px-[20px] rounded-[10px] border border-[##DFE2E9] bg-white"
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={handleInputChange}
+              // onBlur={handleBlur}
               defaultValue={enrollee?.nationality}
             />
           </div>
@@ -257,10 +229,10 @@ setSelectedPreCondition('');
             </label>
             <input
               type="text"
-              name="sor"
+              name="state_of_origin"
               className="text-[#051438] w-full py-[14px] px-[20px] rounded-[10px] border border-[##DFE2E9] bg-white"
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={handleInputChange}
+              // onBlur={handleBlur}
               defaultValue={enrollee?.state_of_origin}
             />
           </div>
@@ -275,8 +247,8 @@ setSelectedPreCondition('');
               type="text"
               name="address"
               className="text-[#051438] w-full py-[14px] px-[20px] rounded-[10px] border border-[##DFE2E9] bg-white disabled:bg-[#DFE2E9]"
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={handleInputChange}
+              // onBlur={handleBlur}
               defaultValue={enrollee?.address}
             />
           </div>
@@ -289,8 +261,8 @@ setSelectedPreCondition('');
               type="text"
               name="insurance_id"
               className="text-[#051438] w-full py-[14px] px-[20px] rounded-[10px] border border-[##DFE2E9] bg-white"
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={handleInputChange}
+              // onBlur={handleBlur}
               defaultValue={enrollee?.insurance_id}
             />
           </div>
@@ -374,78 +346,66 @@ setSelectedPreCondition('');
               <option value="condition1">Condition 1</option>
               <option value="condition2">Condition 2</option>
             </select>
-            <button onClick={(e) => handleAddSelection(e)}  className="bg-[#0B0C7D] text-[#fff] p-3 rounded-xl ">Add Selection</button>
+            <button
+              onClick={(e) => handleAddSelection(e)}
+              className="bg-[#0B0C7D] text-[#fff] p-3 rounded-xl "
+            >
+              Add Selection
+            </button>
+        
           </div>
         ) : null}
-
-{preConditions.length > 0 && (
+        {hasPreExistingConditions && preConditions.length > 0 && (
           <div className="mt-3 text-[#000]">
             <p>Selected Pre-existing Conditions:</p>
             <div className="flex gap-4">
               {preConditions.map((condition, index) => (
-                <div key={index} className="bg-[#EDF0F8] rounded-xl p-3">
-                  {condition}
+                <div className="">
+                
+                <div
+                  key={index}
+                  className="bg-[#EDF0F8] rounded-xl p-3 flex items-center"
+                >
+                  <span>{condition}</span>
+
+                  <button
+                    onClick={() => handleRemoveSelection(index)}
+                    className="ml-2 text-red-500"
+                  >
+                    <RiDeleteBin5Fill />
+                    
+                  </button>
+                  
                 </div>
+
+      
+                </div>
+                
               ))}
+            </div>
+            <div className="flex justify-end">
+
+            <button
+      onClick={() => handleUpdateConditions()}
+      className="bg-[#fff] text-[#0B0C7D] border font-bold border-[#0B0C7D] p-3 rounded-xl  "
+      >
+      Update
+    </button>
             </div>
           </div>
         )}
-        {/* <div className="flex flex-col text-[#000] border border-[#051438] rounded-xl p-4">
-          <div className="flex justify-between items-center">
-            <p>Are there pre-existing conditions?</p>
-            <div className="flex text-[16px] font-bold items-center gap-4">
-              <div className="flex  items-center gap-3">
-                <label htmlFor="yes">Yes</label>
-                <input
-                  type="radio"
-                  id="yes"
-                  name="preConditions"
-                  value="yes"
-                  onChange={handleRadioChange}
-                />
-              </div>
-              <div className="flex items-center gap-3">
-                <label htmlFor="no">No</label>
-                <input
-                  type="radio"
-                  id="no"
-                  name="preConditions"
-                  value="no"
-                  onChange={handleRadioChange}
-                />
-              </div>
-            </div>
-          </div>
-          {hasPreExistingConditions ? (
-            <div>
-              <label htmlFor="preConditions">Pre-existing Conditions:</label>
-              <div
-                contentEditable
-                id="preConditions"
-                className="border p-2"
-                onBlur={(e) =>
-                  setPreConditions(
-                    e.target.textContent
-                      .split("\n")
-                      .filter((item) => item.trim("") !== "")
-                  )
-                }
-              >
-                <div className="flex gap-4">
-                  {preConditions.map((item, index) => (
-                    <div key={index} className="bg-[#EDF0F8] rounded-xl p-5">
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ) : null}
-        </div> */}
       </div>
       <div className="flex justify-end">
         <SmallButton text="Save all changes" type="submit" />
       </div>
+
+
+      <Success
+          visible={openSuccess}
+          title="Staff list updated successfully!"
+          description="Your staff list has been updated"
+          closeModal={() => setOpenSuccessModal(false)}
+        />
     </form>
   );
 }
