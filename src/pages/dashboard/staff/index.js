@@ -173,42 +173,7 @@ function Enrolment({ auth }) {
       }
     }
   };
-  // const uploadFile = async (e) => {
-  //     e.preventDefault();
-
-  //     if (!file) {
-  //       return;
-  //     }
-
-  //     try {
-  //       let formData = new FormData();
-  //       formData.append("file", file);
-  //       formData.append("organization_id", JSON.parse(localStorage.getItem("plateaumed_hr_user")).insurer_id);
-
-  //       const response = await axios.post("https://api.coderigi.co/hr/add.php", formData, {
-  //         headers: {
-  //             'Content-Type': 'multipart/form-data'
-  //           },
-  //       });
-
-  //       console.log("File was uploaded successfully:", response);
-
-  //       if (response.data?.message) {
-  //         setOpenModal(false);
-  //         setFile(null);
-  //         setOpenSuccessModal(true);
-  //         listStaffs();
-  //       }
-
-  //     } catch (e) {
-  //       console.error(e);
-  //       const error =
-  //         e.response && e.response.data
-  //           ? e.response.data.error
-  //           : "Sorry! something went wrong.";
-  //       console.log(error);
-  //     }
-  //   }
+  
   useEffect(() => {
     if (searchQuery) {
       console.log(searchQuery);
