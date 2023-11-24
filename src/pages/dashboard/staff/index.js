@@ -46,15 +46,7 @@ function Enrolment({ auth }) {
   const [totalPages, setTotalPages] = useState(2);
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    if (searchQuery) {
-      console.log(searchQuery);
-      searchOrgs(1, searchQuery);
-    } else {
-      listStaffs();
-    }
-  }, [currentPage, searchQuery, searchOrgs]);
-
+ 
   const listStaffs = async () => {
     setDisabled(true);
     try {
@@ -217,6 +209,14 @@ function Enrolment({ auth }) {
   //       console.log(error);
   //     }
   //   }
+  useEffect(() => {
+    if (searchQuery) {
+      console.log(searchQuery);
+      searchOrgs(1, searchQuery);
+    } else {
+      listStaffs();
+    }
+  }, []);
 
   const openEnrollee = (enrollee) => {
     setEnrollee(enrollee);
