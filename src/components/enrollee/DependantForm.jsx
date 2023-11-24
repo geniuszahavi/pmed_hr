@@ -13,6 +13,7 @@ function DependantForm({ key, insurerId, dependants, index }) {
   const [selectedPreCondition, setSelectedPreCondition] = useState("");
   const [openSuccess, setOpenSuccessModal] = useState(false);
 
+
   const [formData, setFormData] = useState({
     gender: dependants?.gender || "",
     preConditions: dependants?.pre_conditions || [],
@@ -33,7 +34,7 @@ function DependantForm({ key, insurerId, dependants, index }) {
   });
 
   // console.log(formData);
-  // console.log(dependants);
+  console.log(dependants);
 
   const editDependants = async (event) => {
     event.preventDefault();

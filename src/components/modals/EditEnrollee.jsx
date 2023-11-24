@@ -15,7 +15,7 @@ function EditEnrolleeModal({ visible,staff_id, insurer_id, closeModal, enrollee 
 
 useEffect(()=>{
   fetchDependants()
-},[])
+})
 
   const fetchDependants = async () => {
     try {

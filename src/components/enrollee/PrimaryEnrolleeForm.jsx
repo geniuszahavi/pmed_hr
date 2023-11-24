@@ -15,7 +15,7 @@ const [preConditions, setPreConditions] = useState([]);
 const [selectedPreCondition, setSelectedPreCondition] = useState("");
 const [openSuccess, setOpenSuccessModal] = useState(false);
 
-
+// console.log(enrollee)
   const [formData, setFormData] = useState({
     gender: enrollee?.gender || "",
     preConditions: enrollee?.pre_conditions || [],
