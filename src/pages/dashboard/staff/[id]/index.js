@@ -195,7 +195,8 @@ const username = first_name + ' '+ middle_name + " " + last_name
 
                   <EnrolleeInfo
                     title="Pre-existing conditions"
-                    text={JSON.parse(item?.pre_conditions).join(', ')}
+                    text={item?.pre_conditions}
+                    // text={JSON?.parse(item?.pre_conditions).join(', ')}
                     />
 
                   <EnrolleeInfo title="Insurance ID" text="ATL126575553" />
