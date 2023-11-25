@@ -311,18 +311,7 @@ function DependantForm({ key, insurerId, dependants, index }) {
             />
           </div>
 
-          {/* <div className="w-full">
-              <label className="flex mb-1 text-[12px] font-semibold">
-                Preferred hospital location
-              </label>
-              <input
-                type="text"
-                defaultValue={dependants?.preferred_hospital_location}
-                onChange={handleInputChange}
-                className="text-[#051438] w-full py-[14px] px-[20px] rounded-[10px] border border-[##DFE2E9] bg-white disabled:bg-[#DFE2E9]"
-                placeholder="Preferred hospital location"
-              />
-            </div> */}
+        
           <div className="w-full">
             <label className="flex mb-1 text-[12px] font-semibold">
               Preferred hospital location

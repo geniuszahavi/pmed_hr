@@ -8,6 +8,10 @@ function UserDetailsCard({ visible, company, staff, id, closeDetails }) {
   });
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
+  const handlePrint = () => {
+    window.print()
+    setOpenModal(true)
+  };
 
   return (
     <div
@@ -111,7 +115,7 @@ function UserDetailsCard({ visible, company, staff, id, closeDetails }) {
       <div className="flex justify-end mt-7">
         <button
           className="bg-[#0B0C7D] px-9 py-5 rounded-2xl ml-auto text-[#fff] text-lg font-semibold"
-          onClick={() => setOpenModal(true)}
+          onClick={handlePrint}
         >
           {" "}
           Generate
