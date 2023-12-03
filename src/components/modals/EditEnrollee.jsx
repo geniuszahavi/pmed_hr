@@ -13,23 +13,23 @@ function EditEnrolleeModal({ visible,staff_id, insurer_id, closeModal, enrollee 
 // console.log(enrollee)
 
 
-useEffect(()=>{
-  fetchDependants()
-})
+// useEffect(()=>{
+//   fetchDependants()
+// })
 
-  const fetchDependants = async () => {
-    try {
-      const response = await axios.get(`https://api.coderigi.co/hr/getDependants.php?staff_id=${staff_id}`);
-// console.log("dependant form ==> ", response);
-      setDependants(response.data);
-    } catch (error) {
-      // console.log(error);
-    }
-  };
+//   const fetchDependants = async () => {
+//     try {
+//       const response = await axios.get(`https://api.coderigi.co/hr/getDependants.php?staff_id=${staff_id}`);
+// // console.log("dependant form ==> ", response);
+//       setDependants(response.data);
+//     } catch (error) {
+//       // console.log(error);
+//     }
+//   };
 
   
-const filteredDependants = dependants.find((item)=> item.id === enrollee?.insurer_id)
-console.log(filteredDependants)
+// const filteredDependants = dependants.find((item)=> item.id === enrollee?.insurer_id)
+// console.log(filteredDependants)
   return (
     <div
       className={`${
@@ -68,7 +68,7 @@ console.log(filteredDependants)
           >
             Primary enrollee
           </button>
-          <button
+          {/* <button
             className={`text-[16px] font-semibold text-center ${
               activeTab === "dependants"
                 ? "text-[#0B0C7D] border-[#0B0C7D] border-b-2"
@@ -77,7 +77,7 @@ console.log(filteredDependants)
             onClick={() => handleTabChange("dependants")}
           >
             Dependants
-          </button>
+          </button> */}
         </div>
 
         {activeTab === "primary" &&
@@ -85,16 +85,12 @@ console.log(filteredDependants)
             <PrimaryEnrolleeForm staff_id={staff_id} enrollee={item} key={item.id} />
           ))}
 
-        {activeTab === "dependants" && filteredDependants !==0 ? (
+        {/* {activeTab === "dependants" && filteredDependants !==0 ? (
           <>
             <DependantForm insurerId={insurer_id} staff_id={staff_id} dependants={filteredDependants} key={filteredDependants?.dependant_id} index={filteredDependants?.dependant_id} />
-          {/* {
-            filteredDependants?.map((item, index)=>(
-
-            ))
-          } */}
+         
           </>
-        ) : null}
+        ) : null} */}
       </div>
     </div>
   );
