@@ -57,17 +57,17 @@ function EnrolleeRow({ enrollees, openPlan }) {
                 </div>
 
                 <div className="flex flex-col">
-                    <span className="text-[#051438] text-[16px] font-medium">Continental Lagoon Hospitals</span>
-                    <span className="text-[14px] font-medium text-[#677597]">Lekki, Lagos</span>
+                    <span className="text-[#051438] text-[16px] font-medium">{enrollee?.provider}</span>
+                    <span className="text-[14px] font-medium text-[#677597]">{enrollee?.location}</span>
                 </div>
 
                 <button className="flex gap-8 items-center" type="button" onClick={openPlan}>
                     <div className="flex flex-col gap-2 items-start">
                         <p className="flex justify-between items-center gap-12">
-                            <span className="text-[#051438] text-[16px] font-medium">Bronze</span>
+                            <span className="text-[#051438] text-[16px] font-medium">{enrollee?.plan}</span>
                             <InformationCircleIcon className="h-3 w-3" />
                         </p>
-                        <span className="text-[#051438] text-[16px] font-medium">₦52,000</span>
+                        <span className="text-[#051438] text-[16px] font-medium">{enrollee?.plan_amount}</span>
                     </div>
                     <ChevronRightIcon className="h4 w-4" />
                 </button>

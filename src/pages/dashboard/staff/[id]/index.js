@@ -19,6 +19,7 @@ import axios from "axios";
 import InsurerService from "@/services/InsurerService";
 import UserDetailsCard from "@/components/modals/UserDetailsCard";
 import Link from "next/link";
+import EditDependants from "@/components/modals/EditDependants";
 
 function OrganizationStaffSingle({ auth }) {
   const router = useRouter();
@@ -34,10 +35,33 @@ function OrganizationStaffSingle({ auth }) {
   const [disabled, setDisabled] = useState(false);
   const [staffs, setStaffs] = useState(null);
   const [company, setCompany] = useState([])
+  const [dependants, setDependants] = useState([]);
+  const [filteredDependants, setFilteredDependants] = useState(null);
+  const [openEditModal, setOpenEditModel] = useState(false);
 
+  const fetchDependants = async () => {
+    try {
+      const response = await axios.get(`https://api.coderigi.co/hr/getDependants.php?staff_id=${id}`);
+// console.log(response);
+      setDependants(response.data);
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
+  function openClick(id){
+    const selectedDependant = dependants.find((dependant) => dependant.dependant_id === id);
+
+    
+    setOpenEditModel(true)
+    setFilteredDependants(selectedDependant)
+  
+    console.log(id, filteredDependants)
+  }
+  
   useEffect(() => {
     listStaffs()
-    // getCompany()
+    fetchDependants()
     getCompany().then((result) => {
       // console.log('Data from the resolved promise:', result);
     }).catch((error) => {
@@ -86,7 +110,7 @@ function OrganizationStaffSingle({ auth }) {
 
     // filteredStaff = 
     const filteredStaffMembers = staffs?.staff_members?.filter((member) => member.staff_id === id);
-console.log(filteredStaffMembers)
+// console.log(filteredStaffMembers)
  
 const first_name = filteredStaffMembers?.map((item)=> {return item?.first_name})
 const middle_name = filteredStaffMembers?.map((item)=> {return item?.middle_name})
@@ -102,6 +126,11 @@ const username = first_name + ' '+ middle_name + " " + last_name
         <EditEnrolleeModal visible={openEnrolleeModal} insurer_id={insurer_id} staff_id={id} closeModal={() => setOpenEnrolleeModal(false)}
          enrollee={filteredStaffMembers}
            />
+           <EditDependants
+        dependants = {filteredDependants}
+          visible={openEditModal}
+          closeModal={() => setOpenEditModel(false)}
+         />
 
         <SmatNav
           name={user?.organization_contact_first_name}
@@ -206,7 +235,7 @@ const username = first_name + ' '+ middle_name + " " + last_name
               ))}
             </div>
           </div>
-          <div className="bg-white p-[16px] rounded-[10px] w-full">
+          <div className="bg-white p-[16px] rounded-[10px] w-full overflow-y-scroll h-[250px]">
             <div className="w-full flex gap-12 items-center mb-2">
               <span className="text-[#A6AFC2] font-bold text-[16px]">
                 Dependants
@@ -218,27 +247,21 @@ const username = first_name + ' '+ middle_name + " " + last_name
             </div>
 
             {
-              staffs?.total_dependents === 0 ? <>
-              <Dependant name="No data" />
+              staffs?.total_dependents !== 0 ? <>
+              
+              {
+dependants?.map((item, index)=>(
+  <Dependant key={index} id={item?.dependant_id} openClick={openClick} first_name={item?.first_name} last_name={item.last_name} />
+
+))
+              }
               </>:
               <>
-              <h2>No data</h2>
+              {/* <h2>No data</h2> */}
               
               </>
             }
-            {/* {staffs?.total_dependents !== 0 ? (
-              <>
-                {staffs?.total_dependents?.map(() => (
-                  <>
-                    <Dependant name="Arthur Tommy Shelby" />
-                    <Dependant name="Valerie N'kom Shelby" />
-                  </>
-                ))}
-              </>
-            ) : (
-              <>
-              </>
-            )} */}
+           
           </div>
         </section>
         <UserDetailsCard 

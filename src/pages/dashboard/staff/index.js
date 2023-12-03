@@ -13,7 +13,6 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   SearchIcon,
-  SortDescendingIcon,
 } from "@heroicons/react/outline";
 import { useState, useEffect } from "react";
 import { withProtected } from "@/hooks/routes";
@@ -23,7 +22,6 @@ import { useRouter } from "next/navigation";
 import icon from "@/assets/insurer-icon.png";
 import axios from "axios";
 import useLogOut from "@/hooks/useLogout";
-import Pagination from "@/components/Paginatin";
 
 const perPage = 2;
 function Enrolment({ auth }) {
@@ -98,7 +96,6 @@ function Enrolment({ auth }) {
   };
   const updateOrgsState = (response) => {
     const totalStaffs = response?.data?.staff_members?.length;
-    // const calculatedTotalPages = Math.ceil(totalOrgs / perPage);
     console.log(totalStaffs);
     setStaffs(response.data);
     setTotalPages(totalStaffs);
@@ -188,7 +185,6 @@ function Enrolment({ auth }) {
     console.log(enrollee);
     router.push(`/dashboard/staff/${enrollee.staff_id}`);
   };
-  // console.log("current page ==> ", currentPage)
   return (
     <>
       <main className="bg-[#EDF0F8] h-screen">

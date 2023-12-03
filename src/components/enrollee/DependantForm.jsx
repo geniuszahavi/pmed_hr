@@ -113,15 +113,12 @@ function DependantForm({ key, insurerId, dependants, index }) {
     const { name, value } = e.target;
 
     if (name === "preferred_hospital_location") {
-      // Update the form data
       setFormData({
         ...formData,
         preferred_hospital_location: value,
-        preferred_hospital: "", // Reset preferred_hospital when location changes
+        preferred_hospital: "", 
       });
 
-      // Fetch hospitals based on the selected location
-      // const hospitalUrl = `insurer/getProviderByLocation.php?insurer_id=${insurerId}&location=${value}`;
       const hospital = `https://api.coderigi.co/insurer/getProviderByLocation.php?insurer_id=${insurerId}&location=${value}`;
 
       try {
@@ -132,7 +129,6 @@ function DependantForm({ key, insurerId, dependants, index }) {
         console.log(err);
       }
     } else {
-      // If it's another input, update the form data as usual
       setFormData({
         ...formData,
         [name]: value,
@@ -141,21 +137,7 @@ function DependantForm({ key, insurerId, dependants, index }) {
   };
 
 
-  // useEffect(() => {
-  //   async function getHospital() {
-  //     await axios
-  //       .get(hospital)
-  //       .then((res) => {
-  //         setHospital(res?.data);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  //   getLocations();
-  // });
 
-  //
   const handleRemoveSelection = (index) => {
     const updatedPreConditions = [...preConditions];
     updatedPreConditions.splice(index, 1);
