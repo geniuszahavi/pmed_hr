@@ -3,33 +3,13 @@ import { XIcon } from "@heroicons/react/outline";
 import { DependantForm, PrimaryEnrolleeForm } from "..";
 import axios from "axios";
 
-function EditEnrolleeModal({ visible,staff_id, insurer_id, closeModal, enrollee }) {
+function EditEnrolleeModal({ visible,staff_id, closeModal, enrollee }) {
   const [activeTab, setActiveTab] = useState("primary");
-  const [dependants, setDependants] = useState([]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-// console.log(enrollee)
 
-
-// useEffect(()=>{
-//   fetchDependants()
-// })
-
-//   const fetchDependants = async () => {
-//     try {
-//       const response = await axios.get(`https://api.coderigi.co/hr/getDependants.php?staff_id=${staff_id}`);
-// // console.log("dependant form ==> ", response);
-//       setDependants(response.data);
-//     } catch (error) {
-//       // console.log(error);
-//     }
-//   };
-
-  
-// const filteredDependants = dependants.find((item)=> item.id === enrollee?.insurer_id)
-// console.log(filteredDependants)
   return (
     <div
       className={`${
