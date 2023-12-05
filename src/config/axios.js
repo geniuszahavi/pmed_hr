@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const LOCAL_BASE_URL = process.env.REACT_APP_BASE_URL_LOCAL;
-const LIVE_BASE_URL = process.env.REACT_APP_BASE_URL_LIVE;
+const LOCAL_BASE_URL = "https://api.coderigi.co/"
+const LIVE_BASE_URL = "https://placard-api-55f2c69d4a49.herokuapp.com/api/v1/"
 
 let value = null;
 
