@@ -51,7 +51,7 @@ function Login({ auth }) {
             }
             setUser(response.data.data);
             setDisabled(false);
-            router.replace("/dashboard/staff");
+            router.replace("/hr/dashboard/staff");
         } catch (error) {
             console.log(error);
             toast.error(error.message);

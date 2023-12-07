@@ -32,7 +32,7 @@ export function withPublic(WrappedComponent) {
 	  console.log(value);
 
 	  if (value) {
-		router.replace("/dashboard/staff");
+		router.replace("/hr/dashboard/staff");
 		return (
 			<div className="h-screen min-h-screen flex items-center justify-center">
 				<ClipLoader
@@ -68,7 +68,7 @@ export function withProtected(WrappedComponent) {
 			localStorage.removeItem("plateaumed_hr")
 			localStorage.removeItem("plateaumed_hr_user");
 		}
-		router.replace("/auth/login");
+		router.replace("/hr");
 		return (
 			<div className="h-screen min-h-screen flex items-center justify-center">
 				<ClipLoader

@@ -8,7 +8,7 @@ export default function AppLayout({ children }) {
 
 	const logout = () => {
 		auth.logout();
-		router.replace("/admin/auth/login")
+		router.replace("/hr")
 	}
 	return (
 		children
